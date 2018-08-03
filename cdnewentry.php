@@ -39,8 +39,8 @@ if (!$xwords || $xfreedbsearch) { echo "</form>"; }
 
 if ($xwords && !$xfreedbsearch) {
 	$query = "SELECT * FROM cd WHERE";
-	$words = ereg_replace(","," ",$xwords);
-	$words = ereg_replace(" +"," ",$words);
+	$words = preg_replace("/,/"," ",$xwords);
+	$words = preg_replace("/ +/"," ",$words);
 	$words = trim($words);
 	#echo "#$words#<p>";
 	$words = explode(" ", $words);
@@ -92,7 +92,7 @@ if ($xfreedbsearch && $xwords) {
 	if ($webproxy) { curl_setopt ($ch, CURLOPT_PROXY, $webproxy); }
 	$aa = curl_exec ($ch);
 	curl_close ($ch);
-	$aa = ereg_replace("[\n\r]"," ",$aa);
+	$aa = preg_replace("/[\n\r]/"," ",$aa);
 	#echo $aa;
 	#preg_match_all ("|<div class=\"item\">.*?(<a href=.*?</a>).*?<div class=\"artist-name\"><strong>Artist\:</strong>(.*?)</div>|", $aa, $out);
 	#preg_match_all ("|<a href=\"/search/album_details.php\?tui_id=(.*?)&tui_tag=\">(.*?)</a>.*?<div class=\"artist-name\"><strong>Artist:</strong> (.*?)</div>|", $aa, $out);

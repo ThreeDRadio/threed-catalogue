@@ -38,7 +38,7 @@ if ($num == 1) {
 	$r = pg_Fetch_array($result, 0, PGSQL_ASSOC);
 	echo "<b>" . htmlentities($r[name]) . "</b>";
 	$a = htmlentities($r[description]);
-	$a = ereg_replace("\n","<br>",$a);
+	$a = preg_replace("/\n/","<br>",$a);
 	echo "<p>$a";
 	if ($xcreate) {
 		$now = time();
@@ -128,7 +128,7 @@ if ($num == 1) {
 				}
 				echo "</tr></table>";
 				$a = htmlentities($r[content]);
-				$a = ereg_replace("\n","<br>",$a);
+				$a = preg_replace("/\n/","<br>",$a);
 				echo "<p>$a";
 				echo "</td></tr>";
 			}
@@ -197,7 +197,7 @@ if (!$xlid && !$xadd) {
 			
 			echo "</A></b><br>";
 			$a = htmlentities($r[description]);
-			$a = ereg_replace("\n","<br>",$a);
+			$a = preg_replace("/\n/","<br>",$a);
 			echo "$a";
 			echo "</td></TR>";
 		}

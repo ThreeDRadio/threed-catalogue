@@ -139,8 +139,8 @@ if ($xdosearch) {
 	elseif ($xsort == 1) { $qsort = "UPPER(title), UPPER(artist)"; }
 	else { $qsort = "UPPER(artist), UPPER(title)"; }
 	
-	$comments = ereg_replace(","," ",$xcomments);
-	$comments = ereg_replace(" +"," ",$comments);
+	$comments = preg_replace("/,/"," ",$xcomments);
+	$comments = preg_replace("/ +/"," ",$comments);
 	$comments = trim($comments);
 	
 	$query = "SELECT DISTINCT ON ($qsort, cd.id) cd.id as theid, * FROM cd, cdtrack";
@@ -148,8 +148,8 @@ if ($xdosearch) {
 	$query .= " WHERE (cd.id = cdtrack.cdid)";
 	if ($comments) { $query .= " AND (cd.id = cdcomment.cdid) AND (cdtrack.cdid = cdcomment.cdid)"; }
 	
-	$artist = ereg_replace(","," ",$xartist);
-	$artist = ereg_replace(" +"," ",$artist);
+	$artist = preg_replace("/,/"," ",$xartist);
+	$artist = preg_replace("/ +/"," ",$artist);
 	$artist = trim($artist);
 	if ($artist) {
 		$artist = explode(" ", $artist);
@@ -158,8 +158,8 @@ if ($xdosearch) {
 		}
 	}
 	
-	$album = ereg_replace(","," ",$xalbum);
-	$album = ereg_replace(" +"," ",$album);
+	$album = preg_replace("/,/"," ",$xalbum);
+	$album = preg_replace("/ +/"," ",$album);
 	$album = trim($album);
 	if (get_magic_quotes_gpc()) {
 		$album = stripslashes($album);
@@ -173,8 +173,8 @@ if ($xdosearch) {
 		}
 	}
 	
-	$track = ereg_replace(","," ",$xtrack);
-	$track = ereg_replace(" +"," ",$track);
+	$track = preg_replace("/,/"," ",$xtrack);
+	$track = preg_replace("/ +/"," ",$track);
 	$track = trim($track);
 	if ($track) {
 		$track = explode(" ", $track);
@@ -183,8 +183,8 @@ if ($xdosearch) {
 		}
 	}
 	
-	$company = ereg_replace(","," ",$xcompany);
-	$company = ereg_replace(" +"," ",$company);
+	$company = preg_replace("/,/"," ",$xcompany);
+	$company = preg_replace("/ +/"," ",$company);
 	$company = trim($company);
 	if ($company) {
 		$company = explode(" ", $company);

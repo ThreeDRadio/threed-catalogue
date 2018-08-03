@@ -49,7 +49,7 @@ if ($xupdate && $gid) {
 	$passwordchanged = "";
 	$orig = $xusername;
 	$xusername = trim($xusername);
-	$xusername = ereg_replace("[^A-Za-z0-9]","",$xusername);
+	$xusername = preg_replace("/[^A-Za-z0-9]/","",$xusername);
 	if (!$xusername || $xusername != $orig) {
 		$error .= "<p><font color=red><b>Not a Valid Username!</b></font>";
 	}

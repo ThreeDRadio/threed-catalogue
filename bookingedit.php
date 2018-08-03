@@ -92,7 +92,7 @@ if ($command == "create") {
 		$err = 1;
 		$whoerr = 1;
 	}
-	$starttime = ereg_replace (" +", "", trim($xstarttime));
+	$starttime = preg_replace ("/ +/", "", trim($xstarttime));
 	$starthour = "-1"; $startmin = "-1"; $startpm = 0; $startam = 0;
 	if (preg_match("|^([0-9:.]*)([Pp][Mm])$|", $starttime, $matches)) { $startpm = 1; $starttime = $matches[1]; }
 	if (preg_match("|^([0-9:.]*)([Aa][Mm])$|", $starttime, $matches)) { $startam = 1; $starttime = $matches[1]; }
@@ -106,7 +106,7 @@ if ($command == "create") {
 	if (!$startmin) { $startmin = "00"; }
 	if ($startmin >= 0 && $startmin <=59 && $starthour >= 0 && $starthour <= 23) { $xstarttime = sprintf("%02.0f", $starthour) . ":" . sprintf("%02.0f", $startmin); }
 	else { $starterr = 1; $err = 1;}
-	$endtime = ereg_replace (" +", "", trim($xendtime));
+	$endtime = preg_replace ("/ +/", "", trim($xendtime));
 	$endhour = "-1"; $endmin = "-1"; $endpm = 0; $endam = 0;
 	if (preg_match("|^([0-9:.]*)([Pp][Mm])$|", $endtime, $matches)) { $endpm = 1; $endtime = $matches[1]; }
 	if (preg_match("|^([0-9:.]*)([Aa][Mm])$|", $endtime, $matches)) { $endam = 1; $endtime = $matches[1]; }
@@ -252,7 +252,7 @@ if ($command == "update") {
 		$err = 1;
 		$whoerr = 1;
 	}
-	$starttime = ereg_replace (" +", "", trim($xstarttime));
+	$starttime = preg_replace ("/ +/", "", trim($xstarttime));
 	$starthour = "-1"; $startmin = "-1"; $startpm = 0; $startam = 0;
 	if (preg_match("|^([0-9:.]*)([Pp][Mm])$|", $starttime, $matches)) { $startpm = 1; $starttime = $matches[1]; }
 	if (preg_match("|^([0-9:.]*)([Aa][Mm])$|", $starttime, $matches)) { $startam = 1; $starttime = $matches[1]; }
@@ -266,7 +266,7 @@ if ($command == "update") {
 	if (!$startmin) { $startmin = "00"; }
 	if ($startmin >= 0 && $startmin <=59 && $starthour >= 0 && $starthour <= 23) { $xstarttime = sprintf("%02.0f", $starthour) . ":" . sprintf("%02.0f", $startmin); }
 	else { $starterr = 1; $err = 1;}
-	$endtime = ereg_replace (" +", "", trim($xendtime));
+	$endtime = preg_replace ("/ +/", "", trim($xendtime));
 	$endhour = "-1"; $endmin = "-1"; $endpm = 0; $endam = 0;
 	if (preg_match("|^([0-9:.]*)([Pp][Mm])$|", $endtime, $matches)) { $endpm = 1; $endtime = $matches[1]; }
 	if (preg_match("|^([0-9:.]*)([Aa][Mm])$|", $endtime, $matches)) { $endam = 1; $endtime = $matches[1]; }

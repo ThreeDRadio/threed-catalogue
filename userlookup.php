@@ -40,8 +40,8 @@ window.close();}
 $xsearch = trim($xsearch);
 if ($xsearch) {
 	$uquery = "SELECT * FROM users WHERE";
-	$xsearch = ereg_replace(","," ",$xsearch);
-	$xsearch = ereg_replace(" +"," ",$xsearch);
+	$xsearch = preg_replace("/,/"," ",$xsearch);
+	$xsearch = preg_replace("/ +/"," ",$xsearch);
 	$xsearch = strtoupper(trim($xsearch));
 	$words = explode(" ", $xsearch);
 	for ($i=0;$i<$numusers;$i++) {

@@ -69,9 +69,9 @@ if ($xdelyes && $user[admin] == "t") {
 }
 
 if ($xdosave || $xdoswap || $xdocreate) {
-	$xartist = ereg_replace (" +", " ", trim($xartist));
-	$xtitle = ereg_replace (" +", " ", trim($xtitle));
-	$xgenre = ereg_replace (" +", " ", trim($xgenre));
+	$xartist = preg_replace ("/ +/", " ", trim($xartist));
+	$xtitle =  preg_replace ("/ +/", " ", trim($xtitle));
+	$xgenre =  preg_replace ("/ +/", " ", trim($xgenre));
 	settype ($xnumtracks, "integer"); if ($xnumtracks < 0) { $xnumtracks = 0; }
 	if (preg_match("|(.*)/(.*)/(.*)|", $xarrivaldate, $matches)) { $xarrivaldate = $matches[2]."/".$matches[1]."/".$matches[3]; }
 	#if (preg_match("|([.|..])-(.*)-(.*)|", $xarrivaldate, $matches)) { $xarrivaldate = $matches[2]."/".$matches[1]."/".$matches[3]; }
@@ -83,8 +83,8 @@ if ($xdosave || $xdoswap || $xdocreate) {
 	else { $xarrivaldate = date ("Y-m-d", $thedayN); }
 //	if ($temp == "") { $xarrivaldate = "0001-01-01"; }
 	settype ($xcopies, "integer");
-	$xcompany = ereg_replace (" +", " ", trim($xcompany));
-	$xcpa = ereg_replace (" +", " ", trim($xcpa));
+	$xcompany = preg_replace ("/ +/", " ", trim($xcompany));
+	$xcpa =     preg_replace ("/ +/", " ", trim($xcpa));
 	settype ($xcompilation, "integer"); if ($xcompilation < 0 || $xcompilation > 2) { $xcompilation = 0; }
 	settype ($xfemale, "integer"); if ($xfemale < 0 || $xfemale > 3) { $xfemale = 0; }
 	settype ($xlocal, "integer"); if ($xlocal < 0 || $xlocal > 3) { $xlocal = 0; }

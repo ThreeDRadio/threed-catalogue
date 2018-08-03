@@ -71,8 +71,8 @@ if ($xdosearch) {
 	else { $qsort = "UPPER(cd.artist), UPPER(cd.title)"; }
 	
 	$query = "SELECT DISTINCT ON ($qsort, cd.id) *, cd.id AS cdidx FROM cd LEFT OUTER JOIN cdtrack ON cd.id = cdtrack.cdid LEFT OUTER JOIN cdcomment ON cd.id = cdcomment.cdid";
-	$words = ereg_replace(","," ",$xwords);
-	$words = ereg_replace(" +"," ",$words);
+	$words = preg_replace("/,/"," ",$xwords);
+	$words = preg_replace("/ +/"," ",$words);
 	$words = trim($words);
 	//echo "#$words#<p>";
 	$words = explode(" ", $words);

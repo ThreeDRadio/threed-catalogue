@@ -66,8 +66,8 @@ for ($i=0;$i<$nnum;$i++) {
 <?php
 if ($xdosearch) {
 	$query = "SELECT * FROM file WHERE";
-	$words = ereg_replace(","," ",$xwords);
-	$words = ereg_replace(" +"," ",$words);
+	$words = preg_replace("/,/"," ",$xwords);
+	$words = preg_replace("/ +/"," ",$words);
 	$words = trim($words);
 	#echo "#$words#<p>";
 	$words = explode(" ", $words);
@@ -126,7 +126,7 @@ if ($xdosearch) {
 				$description = htmlentities($r[description]);
 				echo "<td>";
 				if ($description) {
-					$description = ereg_replace("[\n]","<br>",$description);
+					$description = preg_replace("/\n/","<br>",$description);
 					echo $description;
 				}
 				else { echo "&nbsp;"; }

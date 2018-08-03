@@ -28,7 +28,7 @@ if ($mnum == 1) {
 }
 
 $motd = htmlentities($mr[note]);
-$motd = ereg_replace("\n","<br>",$motd);
+$motd = preg_replace("/\n/","<br>",$motd);
 echo "<p>$motd";
 ?>
 

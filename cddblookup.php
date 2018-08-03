@@ -24,13 +24,13 @@ if (!$admin && $user[cdeditor] != "t") {
 
 if ($xadd) {
 	$xartist = addslashes(urldecode($xartist));
-	$xartist = ereg_replace (" +", " ", trim($xartist));
+	$xartist = preg_replace ("/ +/", " ", trim($xartist));
 	$xtitle = addslashes(urldecode($xtitle));
-	$xtitle = ereg_replace (" +", " ", trim($xtitle));
+	$xtitle = preg_replace ("/ +/", " ", trim($xtitle));
 	settype ($xnumtracks, "integer"); if ($xnumtracks < 0) { $xnumtracks = 0; }
 	settype ($xyear, "integer"); if ($xyear < 1000 || $xyear > 2100) { $xyear = 0; }
 	$xgenre = addslashes(urldecode($xgenre));
-	$xgenre = ereg_replace (" +", " ", trim($xgenre));
+	$xgenre = preg_replace ("/ +/", " ", trim($xgenre));
 	$timenow = time();
 	$a = date ("Y-m-d");
 	
@@ -69,8 +69,8 @@ if ($xadd) {
 		}
 		else { settype ($tracklength, "integer"); }
 		
-		$tracktitle = ereg_replace (" +", " ", trim($tracktitle));
-		$trackartist = ereg_replace (" +", " ", trim($trackartist));
+		$tracktitle = preg_replace ("/ +/", " ", trim($tracktitle));
+		$trackartist = preg_replace ("/ +/", " ", trim($trackartist));
 		
 		
 		$ttquery = "INSERT INTO cdtrack (cdid, tracknum, tracktitle, trackartist, tracklength)
@@ -101,7 +101,7 @@ if ($id) {
 	if ($webproxy) { curl_setopt ($ch, CURLOPT_PROXY, $webproxy); }
 	$aa = curl_exec ($ch);
 	curl_close ($ch);
-	$aa = ereg_replace("[\n\r]"," ",$aa);
+	$aa = preg_replace("/[\n\r]/"," ",$aa);
 	
 	
 	

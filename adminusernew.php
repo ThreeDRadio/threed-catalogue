@@ -26,7 +26,7 @@ $error = 0;
 if ($xnew) {
 	$orig = $xusername;
 	$xusername = trim($xusername);
-	$xusername = ereg_replace("[^A-Za-z]","",$xusername);
+	$xusername = preg_replace("/[^A-Za-z]/","",$xusername);
 	if (!$xusername || $xusername != $orig) {
 		$error = "<p><font color=red><b>Not a Valid Username!</b></font>";
 	}
