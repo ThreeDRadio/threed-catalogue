@@ -1,0 +1,26 @@
+78a79
+> 	$todayN = mktime (0,0,0,date("m"),date("d"),date("Y"));
+80,81c81,82
+< 	if ($thedayN == -1) { $xarrivaldate = "0001-01-01"; }
+< 	//if ($thedayN == -1) { $xarrivaldate = date('Y-m-d'); }
+---
+> 	if ($thedayN == -1 || $thedayN == "") { $thedayN = $todayN; }
+> //	if ($thedayN == -1) { $xarrivaldate = "0001-01-01"; }
+83,84c84
+< 	if ($temp == "") { $xarrivaldate = "0001-01-01"; }
+< 	//if ($temp == "") { $xarrivaldate = date('Y-m-d'); }
+---
+> //	if ($temp == "") { $xarrivaldate = "0001-01-01"; }
+
+264,266c264,269
+< <?
+< if ($r[arrivaldate] == "0001-01-01") { $a = ""; }
+< //if ($r[arrivaldate] == "0001-01-01") { $a =  date ('d/m/Y'); }
+---
+> <?PHP
+> //if ($r[arrivaldate] == "0001-01-01") { $a = ""; }
+> if ($r[arrivaldate] == -1 || $r[arrivaldate] == "") {
+> 	$thedayN = $todayN;
+> 	$a = date ("d/m/Y");
+> }
+

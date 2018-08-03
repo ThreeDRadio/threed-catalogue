@@ -1,0 +1,7 @@
+body, font, option, h1, h2, h3, h4, h5, h6, td, th, a,
+span, ul, ol, p, dd, dl, dt, input, select, textarea, button {
+font-family: Verdana,Arial,Helvetica,Geneva,sans-serif;
+font-size: 12px; line-height: 1.25em; }
+A:visited, A:link { text-decoration: none; color: blue }
+A:hover { color: #999900; text-decoration: underline; }
+.small { font-size: 10px; }
