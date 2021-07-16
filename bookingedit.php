@@ -16,6 +16,7 @@ header("Expires: 0");?>
 <BODY onload="document.forms[0].xtext.focus()">
 
 <?php
+$q = "'";
 $bquery = "SELECT * FROM bookingthing WHERE active = 't' ORDER by id;";
 $bresult = pg_query($db, $bquery);
 $bnum = pg_num_rows($bresult);
@@ -36,14 +37,26 @@ for ($i=0;$i<$gnum;$i++) {
 $todayN = mktime (0,0,0,date("m"),date("d"),date("Y"));
 $today = date ("Y-m-d", $todayN);
 
+if(isset($_POST['xdateid']))
+{
+  settype ($xeditdate, integer);
+  $xeditdate = htmlspecialchars($_POST['xdateid']);
+  #echo "<font color=green>POSTED xeditdate= :$xeditdate:</font><br><p>";
+}
+
 
 $command = "newdate"; ##
-if ($xdodelete) { $command = "delete"; }
+if ($xeditdate) { $command = "editid"; }
+if ($xdodelete) { $command = "delete"; } ##
 if ($xdoupdate) { $command = "update"; } ##
 if ($xdonew)    { $command = "create"; } ##
 if ($xdocreate) { $command = "create"; } ##
-if ($xeditdate) { $command = "editid"; } ##
-
+#echo "<font color=red><p><b>command= :$command:</b><p></font>";
+#echo "xdodelete= :$xdodelete:<br>";
+#echo "xdoupdate= :$xdoupdate:<br>";
+#echo "xdonew= :$xdonew:<br>";
+#echo "xdocreate= :$xdocreate:<br>";
+#echo "xeditdate= :$xeditdate:<br>";
 
 if ($command == "newdate") {
 	$todayN = mktime (0,0,0,date("m"),date("d"),date("Y"));
@@ -57,6 +70,7 @@ if ($command == "newdate") {
 	$xtext = "";
 	$xwhoid = $cid;
 	$xwho = $name[$cid];
+        #echo "<p>thedayN= :$thedayN:<p>ydate= :$ydate:<p>xdate= :$xdate:";
 	echo "<p><b>ENTER EVENT DETAILS</b>";
 }
 
@@ -131,7 +145,7 @@ if ($command == "create") {
 		$result = pg_query($db, $uquery);
 		echo "<p><b>EVENT HAS BEEN ADDED - ";
 		echo "<a href=bookings.php?xb=$xb&xdate=$xdate>Return to Bookings</b></a>\n";
-		header("Location: http://".$_SERVER['HTTP_HOST'] .dirname($_SERVER['PHP_SELF']) ."/bookings.php?xdate=".$xdate.'&xb='.$xb);
+		header("Location: https://".$_SERVER['HTTP_HOST'] .dirname($_SERVER['PHP_SELF']) ."/bookings.php?xdate=".$xdate.'&xb='.$xb);
 	}
 }
 
@@ -140,17 +154,21 @@ if ($command == "editid") {
 	$todayN = mktime (0,0,0,date("m"),date("d"),date("Y"));
 	$today = date ("Y-m-d", $todayN);
 	$xdateid = $xeditdate;
+        #echo "<b>editid function</b><p>";
+	#echo "<br>xeditdate_2:$xeditdate:<br>xdateid:$xdateid:<p>"; 
 	settype ($xdateid, integer);
+	#echo "<br>xeditdate_3:$xeditdate:<p>";
 	$yquery = "SELECT * FROM booking WHERE id = $q$xdateid$q;";
 	$yresult = pg_query($db, $yquery);
 	$ynum = pg_num_rows($yresult);
 	if ($ynum != 1) {
-		echo "<font color=red><b>That event does not exist</b></font>";
+		echo "<font color=red><b>That event does not exist.</b></font>";
 		echo "<br>$yquery<br>$yresult</body></html>";
 		exit;
 	}
 	$yr = pg_Fetch_array($yresult, 0, PGSQL_ASSOC);
 	$query = "SELECT * FROM booking WHERE id = $q$xdateid$q;";
+        #echo "<p>query= :$query:<p>";
 	$result = pg_query($db, $query);
 	$num = pg_num_rows($result);
 	if ($num) {
@@ -168,7 +186,7 @@ if ($command == "editid") {
 		$xwho = $name[$xwhoid];
 	}
 	else {
-		echo "<font color=red><b>That event does not exist</b></font>";
+		echo "<font color=red><b>That event does not exist..</b></font>";
 		echo "<br>$yquery<br>$yresult</body></html>";
 		exit;
 	}
@@ -189,14 +207,19 @@ if ($command == "editid") {
 if ($command == "update") {
 	$todayN = mktime (0,0,0,date("m"),date("d"),date("Y"));
 	$today = date ("Y-m-d", $todayN);
+        echo "<p><font color=red><b>UPDATE</b></font><p>";
 	settype ($xdateid, integer);
 	$xdateid = $xeditdate;
+        #echo "xeditdate_4 :$xeditdate:<br><br>";
+        #echo "xdateid :$xdateid:<br>";
 	$yquery = "SELECT * FROM booking WHERE id = $q$xdateid$q;";
+        #echo "<br>yquery= :$yquery:<br>";
 	$yresult = pg_query($db, $yquery);
+        #echo "<p>yresult :$yresult:<p>";
 	$ynum = pg_num_rows($yresult);
 	if ($ynum != 1) {
 		echo "<font color=red><b>That event does not exist</b></font>";
-		echo "<br>1:<br>$todayN<br>$today<br>$yquery<br>$yresult<br>$ynum</body></html>";
+		echo "<br>1:<br>todayN:$todayN:<br>today:$today:<br>yquery:$yquery:<br>yresult:$yresult:<br>ynum:$ynum:<br>xdateid:$xdateid:</body></html>";
 		exit;
 	}
 	$yr = pg_Fetch_array($yresult, 0, PGSQL_ASSOC);
@@ -204,6 +227,7 @@ if ($command == "update") {
 	if ($yr[parent]) { $theid = $yr[parent]; }
 	$thestatus = $yr[active];
 	$query = "SELECT * FROM booking WHERE id = $q$theid$q OR parent = $q$theid$q ORDER BY id DESC;";
+        #echo "<p>query= :$query:<p>";
 	$result = pg_query($db, $query);
 	$num = pg_num_rows($result);
 	if ($num) {
@@ -223,7 +247,7 @@ if ($command == "update") {
 	}
 	else {
 		echo "<font color=red><b>That event does not exist</b></font>";
-		echo "<br>$yquery<br>$yresult</body></html>";
+		#echo "<br>$yquery<br>$yresult</body></html>";
 		exit;
 	}
 	echo "<p><b>EDIT THIS EVENT</b>";	$err = "";
@@ -288,27 +312,31 @@ if ($command == "update") {
 		$timenow = time();
 		if ($thestatus != 'x') {
 			$uquery = "UPDATE booking SET active = 'u' WHERE id=$q$theid$q;";
+                        #echo "<p>uquery :$uquery:<p>";
 			$uresult = pg_query($db, $uquery);
 		}
 		$parent = $r[id];
 		if ($r[parent]) { $parent = $r[parent]; }
 		$uquery = "INSERT INTO booking (createwho, createwhen, modifywho, modifywhen, bookedthing, text, date, starttime, endtime, active, parent) VALUES (";
 		$uquery = $uquery . "$q$xwhoid$q, $q$r[createwhen]$q, $q$cid$q, $q$timenow$q, $q$xb$q, $q$xtext$q, $q$ydate$q, $q$xstarttime$q, $q$xendtime$q, 'y', $q$parent$q);";
+                #echo "<p>uquery :$uquery:<p>";
 		$uresult = pg_query($db, $uquery);
 		echo "<p><b>EVENT HAS BEEN UPDATED - ";
 		echo "<a href=bookings.php?xid=$xid&xdate=$xdate>Return to Bookings</b></a>\n";
-		header("Location: http://".$_SERVER['HTTP_HOST'] .dirname($_SERVER['PHP_SELF']) ."/bookings.php?xdate=".$xdate."&xb=$xb");
+		header("Location: https://".$_SERVER['HTTP_HOST'] .dirname($_SERVER['PHP_SELF']) ."/bookings.php?xdate=".$xdate."&xb=$xb");
 	}
 	else { $r[active] = $thestatus; }
 }
 
 
 if ($command == "delete") {
+        echo "<p><font color=red><b>DELETE</b></font><p>";
 	$todayN = mktime (0,0,0,date("m"),date("d"),date("Y"));
 	$today = date ("Y-m-d", $todayN);
 	$err = "";
 	settype ($xdateid, integer);
 	$query = "SELECT * FROM booking WHERE id = $q$xdateid$q;";
+	#echo "<br>xdateid :$xdateid:<br>queryi :$query:<br>";
 	$result = pg_query($db, $query);
 	$num = pg_num_rows($result);
 	if ($num) {
@@ -320,7 +348,7 @@ if ($command == "delete") {
 			echo "</body></html>";
 			exit;
 		}
-		if ($r[date] < $today && !$admin && !$adminbook) {
+	if ($r[date] < $today && !$admin && !$adminbook) {
 			echo "<font color=red><b>You cannot delete a booking in the past</b></font>";
 			echo "</body></html>";
 			exit;
@@ -333,7 +361,8 @@ if ($command == "delete") {
 	}
 	else {
 		echo "<font color=red><b>That event does not exist</b></font>";
-		echo "<br>$yquery<br>$yresult</body></html>";
+		#echo "<br>xdateid:$xdateid:<br>yquery:$yquery:<br>yresult:$yresult:";
+                echo "</body></html>";
 		exit;
 	}
 	
@@ -347,27 +376,31 @@ if ($command == "delete") {
 		if ($r[parent]) { $parent = $r[parent]; }
 		$uquery = "INSERT INTO booking (createwho, createwhen, modifywho, modifywhen, bookedthing, text, date, starttime, endtime, active, parent) VALUES (";
 		$uquery = $uquery . "$q$r[createwho]$q, $q$r[createwhen]$q, $q$cid$q, $q$timenow$q, $q$r[bookedthing]$q, $q$r[text]$q, $q$r[date]$q, $q$r[starttime]$q, $q$r[endtime]$q, 'x', $q$parent$q);";
+		#echo "uquery= :$uquery:<br>";
 		$uresult = pg_query($db, $uquery);
+		#echo "uresult= :$uresult:<br>";
 
 		echo "<p><b>EVENT HAS BEEN DELETED - ";
 		echo "<a href=bookings.php?xid=$xid&xdate=$xdate>Return to Bookings</b></a>\n";
-		header("Location: http://".$_SERVER['HTTP_HOST'] .dirname($_SERVER['PHP_SELF']) ."/bookings.php?xdate=".$xdate."&xb=$xb");
+		header("Location: https://".$_SERVER['HTTP_HOST'] .dirname($_SERVER['PHP_SELF']) ."/bookings.php?xdate=".$xdate."&xb=$xb");
 	}
 }
 
 
 $fdateid = htmlentities(stripslashes(trim($xdateid)));
+#echo "<p>fdateid :$fdateid:<p>";
 $fdate = htmlentities(stripslashes(trim($xdate)));
 $ftext = htmlentities(stripslashes(trim($xtext)));
 $fstarttime = htmlentities(stripslashes(trim($xstarttime)));
 $fendtime = htmlentities(stripslashes(trim($xendtime)));
 if ($xwhoid) { $xwho = $name[$xwhoid]; } else { $xwho = "UNKNOWN"; }
+#echo "xwhoid:$xwhoid:";
 ?>
 
 <form action=bookingedit.php method=post name=myform>
-<input type=hidden name=xdateid value=<?php=$fdateid?>>
 
 <?php
+echo "<input type=hidden name=xdateid value=$fdateid>";
 echo "<input type=hidden name=xb value=$xb>";
 ?>
 
@@ -464,6 +497,7 @@ echo "</form>";
 
 if ($admin || $adminbook) {
 	if ($xdateid) {
+	        #echo "<br>xeditdate_3:$xeditdate:<br>xdateid:$xdateid:";
 		#settype ($xeditdate, integer);
 		$theid = $r[id];
 		if ($r[parent]) { $theid = $r[parent]; }
