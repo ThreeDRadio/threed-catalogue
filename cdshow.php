@@ -277,14 +277,14 @@ for ($i=0;$i<$num;$i++) {
 }
 echo "</TABLE>";
 
-print('<h3>Comments Disabled</h3>');
-if (false) {
+print('<h3>Comments</h3>');
+if (true) {
 	echo "<p><TABLE border=1 cellpadding=1 cellspacing=0 bgcolor=#FFCCCC>";
 	echo "<TR bgcolor=#";
 	echo "FFAAAA";
 	
 	echo "><TD><b>Comments</b></TD></TR>";
-	$query = "SELECT * FROM cdcomment WHERE cdid = $q$xref$q ORDER by createwhen;";
+	$query = "SELECT * FROM cdcomment WHERE cdid = $q$xref$q AND visible=true ORDER by createwhen;";
 	$result = pg_query($db, $query);
 	$num = pg_num_rows($result);
 	for ($i=0;$i<$num;$i++) {

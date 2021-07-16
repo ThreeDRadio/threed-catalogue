@@ -131,6 +131,8 @@ if ($xdocreate) {
 			$q$xgenre$q, $q$xcompany$q, $q$xcpa$q, $q$xarrivaldate$q,
 			$q$xcopies$q, $q$xcompilation$q, $q$xdemo$q, $q$xlocal$q,
 			$q$xfemale$q, $q$cid$q, $q$timenow$q, $q$cid$q, $q$timenow$q, $q$xcomment$q, $q$xstatus$q, $q$xformat$q);";
+	//echo "Insert query is $uquery";
+	//exit;
 	$uresult = pg_query($db, $uquery);
 	$lastoid = pg_last_oid($uresult);
 	$kquery = "SELECT id FROM cd WHERE OID = $q$lastoid$q;";
@@ -150,7 +152,7 @@ if ($xdocreate) {
 		$q$xtracklength[$i]$q);";
 		$ttresult = pg_query($db, $ttquery);
 	}
-	header("Location: http://".$_SERVER['HTTP_HOST'] .dirname($_SERVER['PHP_SELF']) ."/cdshow.php?xref=".$xref);
+	header("Location: https://".$_SERVER['HTTP_HOST'] .dirname($_SERVER['PHP_SELF']) ."/cdshow.php?xref=".$xref);
 }
 
 if ($xdosave || $xdoswap) {
@@ -186,7 +188,7 @@ if ($xdosave || $xdoswap) {
 		#echo $tquery . "<p>";
 		$tresult = pg_query($db, $tquery);
 	}
-	if ($xdosave) { header("Location: http://".$_SERVER['HTTP_HOST'] .dirname($_SERVER['PHP_SELF']) ."/cdshow.php?xref=".$xref); }
+	if ($xdosave) { header("Location: https://".$_SERVER['HTTP_HOST'] .dirname($_SERVER['PHP_SELF']) ."/cdshow.php?xref=".$xref); }
 }
 
 if ($xdoswap) {

@@ -253,6 +253,7 @@ if ($xdosearch) {
 			if ($i % 2 == 0) { echo "CCFFCC"; } else { echo "CCCCFF"; }
 			echo ">";
 			$r = pg_Fetch_array($result, $i, PGSQL_ASSOC);
+
 			
 			$a = htmlentities($r[artist]);
 			echo "<td>";
@@ -264,6 +265,9 @@ if ($xdosearch) {
 			echo "<td>";
 			if ($a) { echo "$a"; }
 			else { echo "&nbsp;"; }
+			if ($r[digital] != 'f') {
+                          echo ' <span style="color: #ff9933;">[DIGITAL]</span>';
+                        }
 			echo "</td>\n";
 			
 			if ($r[arrivaldate] == "0001-01-01") { $a = ""; }

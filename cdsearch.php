@@ -1,6 +1,9 @@
 <?php require("verify.php");
 #### User has logged in and been verified ####
 
+if (!isset($xwords)) {
+  $xwords = '';
+}
 settype ($xsort, "integer");
 if (!$xsort) { $xsort = 3; }
 settype ($xperpage, "integer");
@@ -64,7 +67,7 @@ if ($xperpage > 50) $xperpage = 50;
 
 //$xwords = addslashes($xwords); #################
 
-if ($xdosearch) {
+if (isset($xdosearch)) {
 	if ($xsort == 4) { $qsort = "cd.arrivaldate"; }
 	elseif ($xsort == 3) { $qsort = "cd.arrivaldate"; }
 	elseif ($xsort == 2) { $qsort = "UPPER(cd.title), UPPER(cd.artist)"; }
@@ -141,6 +144,9 @@ if ($xdosearch) {
 			echo "<td>";
 			if ($a) { echo "$a"; }
 			else { echo "&nbsp;"; }
+			//if ($r[digital] != 'f') {
+                        //  echo ' <span style="color: #ff9933;">[DIGITAL]</span>';
+                        //}
 			echo "</td>\n";
 			
 			if ($r[arrivaldate] == "0001-01-01") { $a = ""; }
