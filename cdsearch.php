@@ -77,29 +77,45 @@ if (isset($xdosearch)) {
 	$words = preg_replace("/,/"," ",$xwords);
 	$words = preg_replace("/ +/"," ",$words);
 	$words = trim($words);
-	//echo "#$words#<p>";
 	$words = explode(" ", $words);
+	$words_array = [];
 	$counting = count($words);
+
 	if ($words[0] == "") $counting = 0;
+
 	if ($counting) {
 		for ($i=0;$i<$counting;$i++) {
 			if ($i == 0) { $query .= " WHERE"; }
 			if ($i > 0) { $query .= " AND"; }
-			//if (get_magic_quotes_gpc()) {
-				$words[$i] = stripslashes($words[$i]);
-			//}
-			$words[$i] = pg_escape_string($words[$i]);
-			$query = $query . " (cd.artist ~~* $q%$words[$i]%$q OR cd.title ~~* $q%$words[$i]%$q OR cd.genre ~~* $q%$words[$i]%$q OR cd.company ~~* $q%$words[$i]%$q OR cdtrack.tracktitle ~~* $q%$words[$i]%$q OR cdtrack.trackartist ~~* $q%$words[$i]%$q OR cdcomment.comment ~~* $q%$words[$i]%$q)";
+
+			// Push this word with wildcards onto the parameters array.
+			array_push($words_array, "%".stripslashes($words[$i])."%");
+			// Add a parameter with the number of this word, starting at 1. 
+			$this_word_statement_identifier = "$".($i+1);
+			// Build this part of the query.
+			$query = $query . " (cd.artist ~~* $this_word_statement_identifier
+				OR cd.title ~~* $this_word_statement_identifier
+				OR cd.genre ~~* $this_word_statement_identifier
+				OR cd.company ~~* $this_word_statement_identifier
+				OR cdtrack.tracktitle ~~* $this_word_statement_identifier
+				OR cdtrack.trackartist ~~* $this_word_statement_identifier
+				OR cdcomment.comment ~~* $this_word_statement_identifier
+			)";
 		}
 	}
 	else {
 		$query = "SELECT cd.id as cdidx, * FROM cd";
-
 	}
-	if ($xsort == 3) { $query = $query . " ORDER BY " . $qsort . " DESC, cd.id DESC;"; }
-	else { $query = $query . " ORDER BY " . $qsort . ", cd.id;"; }
-	#echo "<p>" . htmlentities($query) . "<p>";
-	$result = pg_query($db, $query);
+	
+	if ($xsort == 3) { 
+		$query = $query . " ORDER BY " . $qsort . " DESC, cd.id DESC;"; 
+	}
+	else { 
+		$query = $query . " ORDER BY " . $qsort . ", cd.id;"; 
+	}
+
+	$prepared_statement = pg_prepare($db, "simple_cd_query", $query);
+	$result = pg_execute($db, "simple_cd_query", $words_array);
 	$num = pg_num_rows($result);
 	echo "<p><table border=0 cellspacing=0 cellpadding=3>\n";
 	echo "<tr><td><b>$num match";
