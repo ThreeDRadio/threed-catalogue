@@ -143,6 +143,9 @@ if ($xdosearch) {
 	$comments = preg_replace("/ +/"," ",$comments);
 	$comments = trim($comments);
 	
+	// Store every relevant query term in this list and use a prepared statement to execute the search.
+	$search_terms_array = [];
+	
 	$query = "SELECT DISTINCT ON ($qsort, cd.id) cd.id as theid, * FROM cd, cdtrack";
 	if ($comments) { $query .= ", cdcomment"; }
 	$query .= " WHERE (cd.id = cdtrack.cdid)";
@@ -151,52 +154,77 @@ if ($xdosearch) {
 	$artist = preg_replace("/,/"," ",$xartist);
 	$artist = preg_replace("/ +/"," ",$artist);
 	$artist = trim($artist);
+
 	if ($artist) {
 		$artist = explode(" ", $artist);
+
 		for ($i=0;$i<count($artist);$i++) {
-			$query = $query . " AND (artist ~~* $q%$artist[$i]%$q OR trackartist ~~* $q%$artist[$i]%$q)";
+			// Push this word with wildcards onto the parameters array.
+			array_push($search_terms_array, "%".$artist[$i]."%");
+			// Add a parameter with the number of this word, starting at 1. 
+			$this_term_statement_identifier = "$".count($search_terms_array);
+			$query = $query . " AND (artist ~~* $this_term_statement_identifier OR trackartist ~~* $this_term_statement_identifier)";
 		}
 	}
 	
 	$album = preg_replace("/,/"," ",$xalbum);
 	$album = preg_replace("/ +/"," ",$album);
 	$album = trim($album);
-	// if (get_magic_quotes_gpc()) {
-		$album = stripslashes($album);
-	// }
+	$album = stripslashes($album);
+
 	if ($album) {
 		$album = explode(" ", $album);
+
 		for ($i=0;$i<count($album);$i++) {
-			$album[$i] = pg_escape_string($album[$i]);
-			echo $album[$i] . "<br>";
-			$query = $query . " AND (title ~~* $q%$album[$i]%$q)";
+			// Push this word with wildcards onto the parameters array.
+			array_push($search_terms_array, "%".$album[$i]."%");
+			// Add a parameter with the number of this word, starting at 1. 
+			$this_term_statement_identifier = "$".count($search_terms_array);
+			$query = $query . " AND (title ~~* $this_term_statement_identifier)";
 		}
 	}
 	
 	$track = preg_replace("/,/"," ",$xtrack);
 	$track = preg_replace("/ +/"," ",$track);
 	$track = trim($track);
+
 	if ($track) {
 		$track = explode(" ", $track);
+
 		for ($i=0;$i<count($track);$i++) {
-			$query = $query . " AND (tracktitle ~~* $q%$track[$i]%$q)";
+			// Push this word with wildcards onto the parameters array.
+			array_push($search_terms_array, "%".$track[$i]."%");
+			// Add a parameter with the number of this word, starting at 1. 
+			$this_term_statement_identifier = "$".count($search_terms_array);
+			$query = $query . " AND (tracktitle ~~* $this_term_statement_identifier)";
 		}
 	}
 	
 	$company = preg_replace("/,/"," ",$xcompany);
 	$company = preg_replace("/ +/"," ",$company);
 	$company = trim($company);
+
 	if ($company) {
 		$company = explode(" ", $company);
+		
 		for ($i=0;$i<count($company);$i++) {
-			$query = $query . " AND (company ~~* $q%$company[$i]%$q)";
+			// Push this word with wildcards onto the parameters array.
+			array_push($search_terms_array, "%".$company[$i]."%");
+			// Add a parameter with the number of this word, starting at 1. 
+			$this_term_statement_identifier = "$".count($search_terms_array);
+			$query = $query . " AND (company ~~* $this_term_statement_identifier)";
 		}
 	}
 	
 	if ($comments) {
 		$comments = explode(" ", $comments);
+		
 		for ($i=0;$i<count($comments);$i++) {
-			$query = $query . " AND (cdcomment.comment ~~* $q%$comments[$i]%$q)";
+			// Push this word with wildcards onto the parameters array.
+			array_push($search_terms_array, "%".$comments[$i]."%");
+			// Add a parameter with the number of this word, starting at 1. 
+			$this_term_statement_identifier = "$".count($search_terms_array);
+			$query = $query . " AND (cdcomment.comment ~~* $this_term_statement_identifier)";
 		}
 	}
 	
@@ -221,8 +249,9 @@ if ($xdosearch) {
 	
 	if ($xsort == 2) { $query = $query . " ORDER BY " . $qsort . " DESC, cd.id DESC;"; }
 	else { $query = $query . " ORDER BY " . $qsort . ";"; }
-	#echo htmlentities($query);
-	$result = pg_query($db, $query);
+
+	$prepared_statement = pg_prepare($db, "advanced_cd_query", $query);
+	$result = pg_execute($db, "advanced_cd_query", $search_terms_array);
 	$num = pg_num_rows($result);
 	echo "<p><table border=0 cellspacing=0 cellpadding=3>\n";
 	echo "<tr><td><b>$num match";
