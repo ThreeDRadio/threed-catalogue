@@ -313,19 +313,29 @@ $mp3hipath = "/data/music/hi";
 	} else {
 		$b = "Unknown";
 	}
+
 	$uquery = "SELECT * FROM users WHERE id = $q$r[createwho]$q;";
 	$uresult = pg_query($db, $uquery);
-	$unum = pg_num_rows($uresult);
-	if ($unum == 1) {
-		$ur = pg_Fetch_array($uresult, 0, PGSQL_ASSOC);
-		if ($ur['first'] || $ur['last']) {
-			$a = $ur['first'] . " " . $ur['last'];
-		} else
-			$a = $ur['username'];
+
+	if ($uresult) {
+		if (pg_num_rows($uresult) == 1) {
+			$ur = pg_Fetch_array($uresult, 0, PGSQL_ASSOC);
+			if ($ur['first'] || $ur['last']) {
+				$a = $ur['first'] . " " . $ur['last'];
+			} else
+				$a = $ur['username'];
+		} else {
+			$a = "";
+		}
 	} else {
-		$a = "Unknown";
+		$a = "";
 	}
-	echo "$b ($a)</TD></TR>";
+
+	if (strlen($a) > 0) {
+		echo "$b ($a)</TD></TR>";
+	} else {
+		echo "$b</TD></TR>";
+	}
 
 	echo "<TR bgcolor=#DDDDDD><TD valign=top><b>Modified</b></TD><TD>";
 	if ($r['modifywhen']) {
@@ -335,17 +345,26 @@ $mp3hipath = "/data/music/hi";
 	}
 	$uquery = "SELECT * FROM users WHERE id = $q$r[modifywho]$q;";
 	$uresult = pg_query($db, $uquery);
-	$unum = pg_num_rows($uresult);
-	if ($unum == 1) {
-		$ur = pg_Fetch_array($uresult, 0, PGSQL_ASSOC);
-		if ($ur['first'] || $ur['last']) {
-			$a = $ur['first'] . " " . $ur['last'];
-		} else
-			$a = $ur['username'];
+
+	if ($uresult) {
+		if (pg_num_rows($uresult) == 1) {
+			$ur = pg_Fetch_array($uresult, 0, PGSQL_ASSOC);
+			if ($ur['first'] || $ur['last']) {
+				$a = $ur['first'] . " " . $ur['last'];
+			} else
+				$a = $ur['username'];
+		} else {
+			$a = "";
+		}
 	} else {
-		$a = "Unknown";
+		$a = "";
 	}
-	echo "$b ($a)</TD></TR>";
+
+	if (strlen($a) > 0) {
+		echo "$b ($a)</TD></TR>";
+	} else {
+		echo "$b</TD></TR>";
+	}
 
 	echo "</TD></TR></TABLE></TABLE>";
 
