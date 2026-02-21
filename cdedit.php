@@ -60,10 +60,11 @@ header("Expires: 0"); ?>
 	}
 
 	if ($xdelyes && $user['admin'] == "t") {
-		$dquery = "DELETE FROM cd WHERE id = $q$xref$q;";
-		$dresult = pg_query($db, $dquery);
 		$dquery = "DELETE FROM cdtrack WHERE cdid = $q$xref$q;";
 		$dresult = pg_query($db, $dquery);
+		$dquery = "DELETE FROM cd WHERE id = $q$xref$q;";
+		$dresult = pg_query($db, $dquery);
+
 		echo "<p><b>Entry Deleted</b>";
 		echo "</BODY>";
 		echo "</HTML>";
