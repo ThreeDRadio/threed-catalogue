@@ -314,16 +314,20 @@ $mp3hipath = "/data/music/hi";
 		$b = "Unknown";
 	}
 
-	$uquery = "SELECT * FROM users WHERE id = $q$r[createwho]$q;";
-	$uresult = pg_query($db, $uquery);
+	if (!empty($r['createwho'])) {
+		$uquery = "SELECT * FROM users WHERE id = $q$r[createwho]$q;";
+		$uresult = pg_query($db, $uquery);
 
-	if ($uresult) {
-		if (pg_num_rows($uresult) == 1) {
-			$ur = pg_Fetch_array($uresult, 0, PGSQL_ASSOC);
-			if ($ur['first'] || $ur['last']) {
-				$a = $ur['first'] . " " . $ur['last'];
-			} else
-				$a = $ur['username'];
+		if ($uresult) {
+			if (pg_num_rows($uresult) == 1) {
+				$ur = pg_Fetch_array($uresult, 0, PGSQL_ASSOC);
+				if ($ur['first'] || $ur['last']) {
+					$a = $ur['first'] . " " . $ur['last'];
+				} else
+					$a = $ur['username'];
+			} else {
+				$a = "";
+			}
 		} else {
 			$a = "";
 		}
@@ -343,16 +347,21 @@ $mp3hipath = "/data/music/hi";
 	} else {
 		$b = "Unknown";
 	}
-	$uquery = "SELECT * FROM users WHERE id = $q$r[modifywho]$q;";
-	$uresult = pg_query($db, $uquery);
 
-	if ($uresult) {
-		if (pg_num_rows($uresult) == 1) {
-			$ur = pg_Fetch_array($uresult, 0, PGSQL_ASSOC);
-			if ($ur['first'] || $ur['last']) {
-				$a = $ur['first'] . " " . $ur['last'];
-			} else
-				$a = $ur['username'];
+	if (!empty($r['modifywho'])) {
+		$uquery = "SELECT * FROM users WHERE id = $q$r[modifywho]$q;";
+		$uresult = pg_query($db, $uquery);
+
+		if ($uresult) {
+			if (pg_num_rows($uresult) == 1) {
+				$ur = pg_Fetch_array($uresult, 0, PGSQL_ASSOC);
+				if ($ur['first'] || $ur['last']) {
+					$a = $ur['first'] . " " . $ur['last'];
+				} else
+					$a = $ur['username'];
+			} else {
+				$a = "";
+			}
 		} else {
 			$a = "";
 		}
