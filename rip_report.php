@@ -7,9 +7,9 @@ if ($xdate == "")  $xdate = date("Y-m-d");
 if ($xdate2 == "") $xdate2 = date ("Y-m-d");
 if ($xperpage < 5) $xperpage = 200;
 if ($xperpage > 200) $xperpage = 200;
-if ($sdate =="") $sdate=mod;
+if ($sdate =="") $sdate="mod";
 ####Get username
-if (!$xname) { $xname = $user[username]; }
+if (!$xname) { $xname = $user['username']; }
 $xname = htmlentities($xname);
 //echo $xname;
 ?>
@@ -114,19 +114,19 @@ function lookup_cdid($cdid,$dbname) {
 			echo ">";
 			$r = pg_Fetch_array($result, $i, PGSQL_ASSOC);
 			
-			$a = htmlentities($r[id]);
+			$a = htmlentities($r['id']);
 			echo "<td>";
 			if ($a) { echo sprintf("%07.0f", $a); }
 			else { echo "&nbsp;"; }
 			echo "</td>\n";
 			
-			$a = htmlentities($r[artist]);
+			$a = htmlentities($r['artist']);
 			echo "<td>";
 			if ($a) { echo "$a"; }
 			else { echo "&nbsp;"; }
 			echo "</td>\n";
 			
-			$a = htmlentities($r[title]);
+			$a = htmlentities($r['title']);
 			echo "<td>";
 			if ($a) { echo "$a"; }
 			else { echo "&nbsp;"; }
@@ -143,7 +143,7 @@ function lookup_cdid($cdid,$dbname) {
 			//if ($a) { echo "$a"; }
 			//else { echo "&nbsp;"; }
 			echo "</td>\n";
-			$a = htmlentities($r[id]);
+			$a = htmlentities($r['id']);
 			//$a=wave_files_present($a,$db);
 			echo "<td>";
 			//if ($a==0) { echo "OK"; }
@@ -178,7 +178,7 @@ function lookup_cdid($cdid,$dbname) {
 			
 			echo "<td width=1 align=center>";
 			echo "<a HREF=cdshow.php?";
-			echo "xref=" . $r[id] . ">Show<a>";
+			echo "xref=" . $r['id'] . ">Show<a>";
 			
 			echo "</td></TR>\n";
 

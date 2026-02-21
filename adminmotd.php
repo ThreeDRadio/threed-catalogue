@@ -51,7 +51,7 @@ if ($num == 1) { $r = pg_fetch_array($result, 0, PGSQL_ASSOC); }
 <input type=hidden name=xupdate value=1>
 <table border=0 cellspacing=0 cellpadding=2>
 <tr valign=top bgcolor="#CCCCFF">
-<td><textarea name="xmotd" rows="10" cols="60"><?php echo htmlentities($r[note])?></textarea></td>
+<td><textarea name="xmotd" rows="10" cols="60"><?php echo htmlentities($r['note'])?></textarea></td>
 </tr>
 </table>
 <p><input type=submit name=xbutton value=Save>

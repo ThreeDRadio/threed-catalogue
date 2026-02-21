@@ -22,7 +22,7 @@ if ($xupdate) {
 	$pwmismatch = "";
 	$passwordchanged = "";
 	$xpassword0 = MD5($xpassword0);
-	if ($xpassword0 != $user[password]) { $error .= "<p><font color=red><b>Old password is not correct</b></font>"; }
+	if ($xpassword0 != $user['password']) { $error .= "<p><font color=red><b>Old password is not correct</b></font>"; }
 	if ($xpassword1 != $xpassword2) { $error .= "<p><font color=red><b>New passwords do not match</b></font>"; }
 	if (strlen ($xpassword1) < 5 || strlen ($xpassword2) < 5) { $error .= "<p><font color=red><b>New password is too short (5 characters min)</b></font>"; }
 	if (!$error) {

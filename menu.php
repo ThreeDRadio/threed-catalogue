@@ -1,4 +1,5 @@
 <?php require("verify.php");
+require_once("config.php");
 #### User has logged in and been verified ####
 
 header("Cache-Control: no-cache");
@@ -26,7 +27,7 @@ header("Expires: 0");?>
 <br><a href=cdsearch.php target=main>-&nbsp;Quick&nbsp;Search</a>
 <br><a href=cdsearchadv.php target=main>-&nbsp;Adv&nbsp;Search</a>
 <?php
-if ($admin || $user[cdeditor] == 't') { 
+if ($admin || $user['cdeditor'] == 't') { 
 	echo "<br><a href=cdnewentry.php target=main>-&nbsp;New&nbsp;Entry</a>";
 	echo "<br><a href=session_report.php target=main>-&nbsp;Session&nbsp;Report</a>";
 	echo "<br><a href=cdstats.php target=main>-&nbsp;Stats</a>";
@@ -34,7 +35,7 @@ if ($admin || $user[cdeditor] == 't') {
 		echo "<br><a href=session_report_tot.php target=main>-&nbsp;User&nbsp;Totals</a>";
 	}
 }
-?><br><br><a href=../ripper.html target=main>-&nbsp;Processing Instructions</a>
+?><!--<br><br><a href=../ripper.html target=main>-&nbsp;Processing Instructions</a>-->
 <?php
 
 echo "<p><b>Bookings</b>";
@@ -44,19 +45,19 @@ if ($admin) {
 }
 
 
-echo "<p><b>Lists</b>";
-echo "<br><a href=lists.php target=main>-&nbsp;View&nbsp;Lists</a>";
-if ($admin) {
-	echo "<br><a href=listsmanage.php target=main>-&nbsp;Manage&nbsp;Lists</a>";
-}
+// echo "<p><b>Lists</b>";
+// echo "<br><a href=lists.php target=main>-&nbsp;View&nbsp;Lists</a>";
+// if ($admin) {
+// 	echo "<br><a href=listsmanage.php target=main>-&nbsp;Manage&nbsp;Lists</a>";
+// }
 
 
-echo "<p><b>Files</b>";
-echo "<br><a href=files.php target=main>-&nbsp;Search</a>";
-echo "<br><a href=fileupload.php target=main>-&nbsp;Upload</a>";
-if ($admin) {
-	echo "<br><a href=filecats.php target=main>-&nbsp;Categories</a>";
-}
+// echo "<p><b>Files</b>";
+// echo "<br><a href=files.php target=main>-&nbsp;Search</a>";
+// echo "<br><a href=fileupload.php target=main>-&nbsp;Upload</a>";
+// if ($admin) {
+// 	echo "<br><a href=filecats.php target=main>-&nbsp;Categories</a>";
+// }
 
 
 if ($admin) {
@@ -69,6 +70,6 @@ if ($admin) {
 ?>
 
 <p><a href=logout.php target=_parent><b>Logout</b></a>
-
+<p><small><b><?php echo $app_version ?></b></small></p>
 </BODY>
 </HTML>

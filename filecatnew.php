@@ -25,13 +25,27 @@ if (!$admin) {
 $error = 0;
 if ($xnew) {
 	$xname = trim($xname);
-	$uquery = "INSERT INTO filecat (name, active) VALUES ($q$xname$q, 't');";
+	// Generate a new filecat in the DB. Retrieve the new id value
+	$uquery = "INSERT INTO filecat (name, active) VALUES ($q$xname$q, 't') RETURNING id;";
 	$uresult = pg_query($db, $uquery);
-	$lastoid = pg_last_oid($uresult);
-	$kquery = "SELECT id FROM filecat WHERE OID = $q$lastoid$q;";
-	$kresult = pg_query($db, $kquery);
-	$kr = pg_fetch_array($kresult, 0, PGSQL_ASSOC);
-	header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/filecatedit.php?gid=".$kr[id]);
+
+	if ($uresult && pg_num_rows($uresult) > 0) {
+		$id_of_new_row = pg_fetch_row($uresult)[0];
+
+		// Take the user to the edit page for the filecat we just created for them.
+		$kquery = "SELECT id FROM filecat WHERE id = $q$id_of_new_row$q;";
+		$kresult = pg_query($db, $kquery);
+
+		// Only go there if the query above was successful. If not, take the user back to the filecat page
+		if ($kresult && pg_num_rows($kresult) > 0) { 
+			$kr = pg_fetch_array($kresult, 0, PGSQL_ASSOC);
+			header("Location: https://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/filecatedit.php?gid=".$kr['id']);
+			exit;
+		}
+	}
+
+	// If the above query fails, then just go back to file categories.
+	header("Location: https://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/filecats.php");
 }
 ?>
 

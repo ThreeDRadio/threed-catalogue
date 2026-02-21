@@ -44,21 +44,21 @@ if ($num) {
 		echo ">";
 		$r = pg_Fetch_array($result, $i, PGSQL_ASSOC);
 		
-		$a = htmlentities($r[name]);
+		$a = htmlentities($r['name']);
 		echo "<td>";
 		if ($a) { echo "$a"; }
 		else { echo "&nbsp;"; }
 		echo "</td>\n";
 		
 		$a = "no";
-		if ($r[active] == 't') { $a = "<font color=red>yes</font>"; }
+		if ($r['active'] == 't') { $a = "<font color=red>yes</font>"; }
 		echo "<td align=center>";
-		echo '<A HREF="filecats.php?xid='.$r[id].'&togactive=1'.'">'.$a.'</A>';
+		echo '<A HREF="filecats.php?xid='.$r['id'].'&togactive=1'.'">'.$a.'</A>';
 		echo "</td>\n";
 				
 		echo "<td align=center>";
 		echo "<a HREF=filecatedit.php?";
-		echo 'gid=' . $r[id] . ">Edit<a>";
+		echo 'gid=' . $r['id'] . ">Edit<a>";
 		echo "</td></TR>\n";
 
 		echo "</TR>\n";

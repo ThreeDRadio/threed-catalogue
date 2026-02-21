@@ -53,9 +53,9 @@ $xdate = $thedayS;
 $ddate = date ("j M Y", $thedayN);
 $prevS = date ("Y-m-d", mktime (0,0,0,date("m", $thedayN),date("d", $thedayN)-7,date("Y", $thedayN)));
 $nextS = date ("Y-m-d", mktime (0,0,0,date("m", $thedayN),date("d", $thedayN)+7,date("Y", $thedayN)));
-$mondayoffset = date(w, $thedayN) - 1; if (date(w, $thedayN) == 0) { $mondayoffset = 6; }
+$mondayoffset = date('w', $thedayN) - 1; if (date('w', $thedayN) == 0) { $mondayoffset = 6; }
 $themonN = mktime (0,0,0,date("m", $thedayN),date("d", $thedayN)-$mondayoffset,date("Y", $thedayN));
-$Tmondayoffset = date(w, $todayN) - 1; if (date(w, $todayN) == 0) { $Tmondayoffset = 6; }
+$Tmondayoffset = date('w', $todayN) - 1; if (date('w', $todayN) == 0) { $Tmondayoffset = 6; }
 $TthemonN = mktime (0,0,0,date("m", $todayN),date("d", $todayN)-$Tmondayoffset,date("Y", $todayN));
 $week = round(($themonN - $TthemonN)/60/60/24/7); ## cludge warning
 ?>
@@ -115,8 +115,8 @@ for ($i=0;$i<7;$i++) {
 	$num = pg_num_rows($result);
 	for ($j=0;$j<$num;$j++) {
 		$r = pg_Fetch_array($result, $j, PGSQL_ASSOC);
-		$tstart[$j] = $r[starttime];
-		$tend[$j] = $r[endtime];
+		$tstart[$j] = $r['starttime'];
+		$tend[$j] = $r['endtime'];
 		$clash[$j] = 0;
 	}
 	for ($j=0;$j<$num;$j++) {
@@ -129,19 +129,18 @@ for ($i=0;$i<7;$i++) {
 		$r = pg_Fetch_array($result, $j, PGSQL_ASSOC);
 		$col = '#000000';
 		echo '<p>';
-		if ($admin || $adminbook || ($datelink[$i] >= $todayS && $r[createwho] == $cid)) { echo '<A HREF="bookingedit.php?xeditdate=', $r[id], '">'; }
+		if ($admin || $adminbook || ($datelink[$i] >= $todayS && $r['createwho'] == $cid)) { echo '<A HREF="bookingedit.php?xeditdate=', $r['id'], '">'; }
 		echo '<font class=small color=';
 		if ($clash[$j]) { echo "red"; } else { echo "blue"; }
 		echo '>';
-		echo htmlentities($r[starttime]) . " - ";
-		echo htmlentities($r[endtime]) . "<br>";
-		echo "<font class=small color=green>" . $name[$r[createwho]] . "</font><br>";
-		echo "<font class=small color=black>" . htmlentities($r[text]) . "</font><br>";
+		echo htmlentities($r['starttime']) . " - ";
+		echo htmlentities($r['endtime']) . "<br>";
+		echo "<font class=small color=green>" . $name[$r['createwho']] . "</font><br>";
+		echo "<font class=small color=black>" . htmlentities($r['text']) . "</font><br>";
 		echo "</font>";
-		if ($admin || $adminbook || ($datelink[$i] >= $todayS && $r[createwho] == $cid)) { echo "</a>"; }
-		$parent = $r[id];
-		if ($r[parent]) { $parent = $r[parent]; }
-		#echo "<font class=small color=black>[$parent-$r[active]]</font>";
+		if ($admin || $adminbook || ($datelink[$i] >= $todayS && $r['createwho'] == $cid)) { echo "</a>"; }
+		$parent = $r['id'];
+		if ($r['parent']) { $parent = $r['parent']; }
 	}
 	if (!$num) { echo '&nbsp;'; }
 	echo "</td>";
@@ -173,12 +172,12 @@ if ($admin || $adminbook) {
 			$r = pg_Fetch_array($wresult, $j, PGSQL_ASSOC);
 			$col = '#000000';
 			echo '<p>';
-			echo '<A HREF="bookingedit.php?xeditdate=', $r[id], '">';
+			echo '<A HREF="bookingedit.php?xeditdate=', $r['id'], '">';
 			echo '<font class=small color=grey>';
-			echo htmlentities($r[starttime]) . " - ";
-			echo htmlentities($r[endtime]) . "<br>";
-			echo $name[$r[createwho]] . "<br>";
-			echo htmlentities($r[text]) . "<br>";
+			echo htmlentities($r['starttime']) . " - ";
+			echo htmlentities($r['endtime']) . "<br>";
+			echo $name[$r['createwho']] . "<br>";
+			echo htmlentities($r['text']) . "<br>";
 			echo "</font>";
 			echo "</a>";
 		}

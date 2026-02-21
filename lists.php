@@ -36,8 +36,8 @@ $result = pg_query($db, $query);
 $num = pg_num_rows($result);
 if ($num == 1) {
 	$r = pg_Fetch_array($result, 0, PGSQL_ASSOC);
-	echo "<b>" . htmlentities($r[name]) . "</b>";
-	$a = htmlentities($r[description]);
+	echo "<b>" . htmlentities($r['name']) . "</b>";
+	$a = htmlentities($r['description']);
 	$a = preg_replace("/\n/","<br>",$a);
 	echo "<p>$a";
 	if ($xcreate) {
@@ -71,7 +71,7 @@ if ($num == 1) {
 		$unread = 0;
 		if ($lnum == 1) {
 			$lr = pg_Fetch_array($lresult, 0, PGSQL_ASSOC);
-			$upto = $lr[messageid];
+			$upto = $lr['messageid'];
 		}
 		else $upto = 0;
 		
@@ -83,7 +83,7 @@ if ($num == 1) {
 			$mquery .= ";";
 			$mresult = pg_query($db, $mquery);
 			$mr = pg_Fetch_array($mresult, 0, PGSQL_ASSOC);
-			$unread = $mr[count];
+			$unread = $mr['count'];
 			$xcursor = $num - $unread + 1;
 		}
 		if ($xcursor < 1) $xcursor = 1;
@@ -110,24 +110,24 @@ if ($num == 1) {
 			echo "<p><TABLE border=1 cellpadding=4 cellspacing=0 bgcolor=#EEEEEE width=100%>";
 			for ($i=$start-1;$i<$end;$i++) {
 				$r = pg_Fetch_array($result, $i, PGSQL_ASSOC);
-				$id = $r[id];
-				if ($r[active] != 't') echo "<tr bgcolor=#FF9999>";
+				$id = $r['id'];
+				if ($r['active'] != 't') echo "<tr bgcolor=#FF9999>";
 				elseif ($id > $upto) echo "<tr bgcolor=#99FF99>";
 				else echo "<tr>";
 				echo "<td><TABLE border=0 cellpadding=0 cellspacing=0 width=100%><tr><td>";
 				echo "<b><font color=AA0000>";
-				echo date ("g:ia j M Y", $r[createwhen]);
-				echo " (" . $name[$r[createwho]] . ")";
+				echo date ("g:ia j M Y", $r['createwhen']);
+				echo " (" . $name[$r['createwho']] . ")";
 				echo "</font></b>";
 				echo "</td>";
 				if ($admin) {
 					echo "<td align=right><b>";
-					if ($r[active] == 't')  echo "<A HREF=lists.php?xlid=$xlid&xcursor=$xcursor&xd=$id>Delete</A>";
+					if ($r['active'] == 't')  echo "<A HREF=lists.php?xlid=$xlid&xcursor=$xcursor&xd=$id>Delete</A>";
 					else echo "<A HREF=lists.php?xlid=$xlid&xcursor=$xcursor&xud=$id>Undelete</A>";
 					echo "</b></td>";
 				}
 				echo "</tr></table>";
-				$a = htmlentities($r[content]);
+				$a = htmlentities($r['content']);
 				$a = preg_replace("/\n/","<br>",$a);
 				echo "<p>$a";
 				echo "</td></tr>";
@@ -173,7 +173,7 @@ if (!$xlid && !$xadd) {
 			echo "><td>";
 			$r = pg_Fetch_array($result, $i, PGSQL_ASSOC);
 			
-			$a = htmlentities($r[name]);
+			$a = htmlentities($r['name']);
 			echo "<b><A HREF=lists.php?xlid=$r[id]>";
 			if ($a) { echo "$a"; } else { echo "UNKNOWN"; }
 			echo "";
@@ -185,18 +185,18 @@ if (!$xlid && !$xadd) {
 			$unread = 0;
 			if ($lnum == 1) {
 				$lr = pg_Fetch_array($lresult, 0, PGSQL_ASSOC);
-				$upto = $lr[messageid];
+				$upto = $lr['messageid'];
 			}
 			$mquery = "SELECT count(*) FROM list WHERE listid = '$r[id]' AND id > '$upto'";
 			if (!$admin) $mquery .= " AND active = 't'";
 			$mquery .= ";";
 			$mresult = pg_query($db, $mquery);
 			$mr = pg_Fetch_array($mresult, 0, PGSQL_ASSOC);
-			$unread = $mr[count];
+			$unread = $mr['count'];
 			echo " ($unread unread)";
 			
 			echo "</A></b><br>";
-			$a = htmlentities($r[description]);
+			$a = htmlentities($r['description']);
 			$a = preg_replace("/\n/","<br>",$a);
 			echo "$a";
 			echo "</td></TR>";

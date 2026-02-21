@@ -3,7 +3,7 @@
 extract($_POST);
 extract($_GET);
 $cid = $_COOKIE["threed_id"];
-settype ($cid, integer);
+settype ($cid, "integer");
 $cpassword = $_COOKIE["threed_password"];
 if (!$cpassword) { $cpassword = "nuffin"; }
 
@@ -42,7 +42,7 @@ $query = "SELECT * FROM users WHERE id = $q$cid$q AND password = $q$cpassword$q 
 $result = pg_query($db, $query);
 $num = pg_num_rows($result);
 if ($num != 1) {
-	header("Location: http://".$_SERVER['HTTP_HOST'] .dirname($_SERVER['PHP_SELF']) ."/login.php");
+	header("Location: https://".$_SERVER['HTTP_HOST'] .dirname($_SERVER['PHP_SELF']) ."/login.php");
 	exit;
 }
 

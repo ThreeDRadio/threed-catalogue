@@ -178,11 +178,11 @@ function wave_files_present($cdid,$dbname) {
 	for ($i=0;$i<$num;$i++) {
 		$istitle = 0;
 		$r = pg_Fetch_array($result, $i, PGSQL_ASSOC);
-		$tracknum[$i] = $r[tracknum];
-		$trackartist[$i] = $r[trackartist];
+		$tracknum[$i] = $r['tracknum'];
+		$trackartist[$i] = $r['trackartist'];
 		if ($trackartist[$i]) { $isartist = 1; }
-		$tracktitle[$i] = $r[tracktitle];
-		$thetracknum = sprintf("%02.0f", $r[tracknum]);
+		$tracktitle[$i] = $r['tracktitle'];
+		$thetracknum = sprintf("%02.0f", $r['tracknum']);
 		$data=strtolower($tracktitle[$i]);
 		$data=strpos($tracktitle,"[data");
 		if (strpos(strtolower ($tracktitle[$i]),"[data") === false) {

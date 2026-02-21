@@ -55,7 +55,7 @@ if ($check) { # uploading a file
 		$res = move_uploaded_file($_FILES['xuserfile']['tmp_name'], "$filestore$kr[id]");
 		echo "<p>##$res##<P>";
 		echo "<p>FILE UPLOADED";
-		$goto = "Location: http://".$_SERVER['HTTP_HOST'] .dirname($_SERVER['PHP_SELF']) ."/cdedit.php?xref=".$kr[id];
+		$goto = "Location: https://".$_SERVER['HTTP_HOST'] .dirname($_SERVER['PHP_SELF']) ."/cdedit.php?xref=".$kr['id'];
 		echo "<p>$goto";
 		if ($kresult) { header($goto); }
 	}

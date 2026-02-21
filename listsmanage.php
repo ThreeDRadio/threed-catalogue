@@ -30,7 +30,7 @@ if ($togactive && $xid != $cid) {
 	$num = pg_num_rows($result);
 	if ($num == 1) {
 		$row = pg_Fetch_array($result, 0, PGSQL_ASSOC);
-		if ($row[active] == 't') { $newin = 'f'; } else { $newin = 't'; }
+		if ($row['active'] == 't') { $newin = 'f'; } else { $newin = 't'; }
 		$uquery = "UPDATE listthing SET active = $q$newin$q WHERE id = $q$xid$q;";
 		$uresult = pg_query($db, $uquery);
 	}
@@ -51,21 +51,21 @@ if ($num) {
 		echo ">";
 		$r = pg_Fetch_array($result, $i, PGSQL_ASSOC);
 		
-		$a = htmlentities($r[name]);
+		$a = htmlentities($r['name']);
 		echo "<td>";
 		if ($a) { echo "$a"; }
 		else { echo "&nbsp;"; }
 		echo "</td>\n";
 		
 		$a = "no";
-		if ($r[active] == 't') { $a = "<font color=red>yes</font>"; }
+		if ($r['active'] == 't') { $a = "<font color=red>yes</font>"; }
 		echo "<td align=center>";
-		echo '<A HREF="listsmanage.php?xid='.$r[id].'&togactive=1'.'">'.$a.'</A>';
+		echo '<A HREF="listsmanage.php?xid='.$r['id'].'&togactive=1'.'">'.$a.'</A>';
 		echo "</td>\n";
 				
 		echo "<td align=center>";
 		echo "<a HREF=listsedit.php?";
-		echo 'gid=' . $r[id] . ">Edit<a>";
+		echo 'gid=' . $r['id'] . ">Edit<a>";
 		echo "</td></TR>\n";
 
 		echo "</TR>\n";

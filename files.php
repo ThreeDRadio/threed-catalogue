@@ -35,11 +35,11 @@ $nresult = pg_query($db, $nquery);
 $nnum = pg_num_rows($nresult);
 for ($i=0;$i<$nnum;$i++) {
 	$nr = pg_Fetch_array($nresult, $i, PGSQL_ASSOC);
-	$catname[$nr[id]] = htmlentities($nr[name]);
+	$catname[$nr['id']] = htmlentities($nr['name']);
 	#if ($nr[active] == 't') {
-		echo "<option value=" . $nr[id];
-		if ($nr[id] == $xcat) { echo " selected"; }
-		echo ">".htmlentities($nr[name])."</option>";
+		echo "<option value=" . $nr['id'];
+		if ($nr['id'] == $xcat) { echo " selected"; }
+		echo ">".htmlentities($nr['name'])."</option>";
 	#}
 }
 ?>
@@ -107,23 +107,23 @@ if ($xdosearch) {
 		echo "<tr><th align=left>File Name</th><th align=left>Description</th><th align=right>Size</th><th align=left>Category</th><th align=center>Uploaded</th><th align=center>By</th><th align=center>Action</th></tr>\n";
 		for ($i=$start-1;$i<$end;$i++) {
 			$r = pg_Fetch_array($result, $i, PGSQL_ASSOC);
-			if ($admin || $r[status] == 0) {
+			if ($admin || $r['status'] == 0) {
 				echo "<TR valign=top bgcolor=#";
-				if ($r[status] == 1) { echo "FFCCCC"; }
+				if ($r['status'] == 1) { echo "FFCCCC"; }
 				elseif ($i % 2 == 0) { echo "CCFFCC"; } else { echo "CCCCFF"; }
 				echo ">";
-				$filename = preg_replace ("/[^A-Za-z0-9_.-]/", "", $r[name]);
+				$filename = preg_replace ("/[^A-Za-z0-9_.-]/", "", $r['name']);
 				if (!$filename) { $filename = "UNKNOWN"; }
 				echo "<p>" . $urlname . "<p>";
 				echo "<td>";
 				# Needs the following in httpd.conf for this virtual host
 				# RewriteEngine  on
 				# RewriteRule    ^/threedfile/(.*)$   /threed/download.php?xname=$1
-				if ($filename) { echo "<a HREF=/threedfile/" . $r[id] . "/" . $filename . ">$filename<a>"; }
+				if ($filename) { echo "<a HREF=/threedfile/" . $r['id'] . "/" . $filename . ">$filename<a>"; }
 				else { echo "NONAME"; }
 				echo "</td>\n";
 				
-				$description = htmlentities($r[description]);
+				$description = htmlentities($r['description']);
 				echo "<td>";
 				if ($description) {
 					$description = preg_replace("/\n/","<br>",$description);
@@ -132,7 +132,7 @@ if ($xdosearch) {
 				else { echo "&nbsp;"; }
 				echo "</td>\n";
 				
-				$tsize = $r[size];
+				$tsize = $r['size'];
 				if ($tsize < 1024) { $size = $tsize . "B"; }
 				elseif ($tsize < 10240) { $size = round($tsize/1024*10)/10 . "K"; }
 				elseif ($tsize < 1048064) { $size = round($tsize/1024) . "K"; }
@@ -145,26 +145,26 @@ if ($xdosearch) {
 				echo "</td>\n";
 				
 				echo "<td align=left>";
-				if ($r[category]) { echo $catname[$r[category]]; }
+				if ($r['category']) { echo $catname[$r['category']]; }
 				else { echo "&nbsp;"; }
 				echo "</td>\n";
 				
-				$ddate = date ("d/m/Y", $r[whenuploaded]);
+				$ddate = date ("d/m/Y", $r['whenuploaded']);
 				echo "<td>";
 				if ($ddate) { echo "$ddate"; }
 				else { echo "&nbsp;"; }
 				echo "</td>\n";
 				
-				$who = $name[$r[whouploaded]];
+				$who = $name[$r['whouploaded']];
 				echo "<td>";
 				if ($who) { echo "$who"; }
 				else { echo "&nbsp;"; }
 				echo "</td>\n";
 				
 				echo "<td align=center>";
-				if ($admin || $r[whouploaded] == $cid) {
+				if ($admin || $r['whouploaded'] == $cid) {
 					echo "<a HREF=fileedit.php?";
-					echo 'xref=' . $r[id] . ">Edit<a>";
+					echo 'xref=' . $r['id'] . ">Edit<a>";
 				}
 				else { echo "&nbsp;"; }
 				echo "</td>\n";

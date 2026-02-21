@@ -25,13 +25,23 @@ if (!$admin) {
 $error = 0;
 if ($xnew) {
 	$xname = trim($xname);
-	$uquery = "INSERT INTO bookingthing (name, active) VALUES ($q$xname$q, 't');";
+	$uquery = "INSERT INTO bookingthing (name, active) VALUES ($q$xname$q, 't') RETURNING id;";
 	$uresult = pg_query($db, $uquery);
-	$lastoid = pg_last_oid($uresult);
-	$kquery = "SELECT id FROM bookingthing WHERE OID = $q$lastoid$q;";
-	$kresult = pg_query($db, $kquery);
-	$kr = pg_fetch_array($kresult, 0, PGSQL_ASSOC);
-	header("Location: http://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/assetedit.php?gid=".$kr[id]);
+
+	if ($uresult && pg_num_rows($uresult) > 0) {
+		$id_of_new_row = pg_fetch_row($uresult)[0];
+		$kquery = "SELECT id FROM bookingthing WHERE id = $q$id_of_new_row$q;";
+		$kresult = pg_query($db, $kquery);
+
+		if ($kresult && pg_num_rows($kresult) > 0) {
+			$kr = pg_fetch_array($kresult, 0, PGSQL_ASSOC);
+			header("Location: https://".$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF'])."/assetedit.php?gid=".$kr['id']);
+			exit;
+		}
+	}
+
+	// Just go back to assets if there is any failure.
+	header("Location: https://".$_SERVER['HTTP_HOST'] .dirname($_SERVER['PHP_SELF']) ."/assets.php");
 }
 ?>
 

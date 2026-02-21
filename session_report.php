@@ -7,9 +7,9 @@ if ($xdate == "")  $xdate = date("Y-m-d");
 if ($xdate2 == "") $xdate2 = date ("Y-m-d");
 if ($xperpage < 5) $xperpage = 200;
 if ($xperpage > 200) $xperpage = 200;
-if ($sdate =="") $sdate=mod;
+if ($sdate =="") $sdate="mod";
 ####Get username
-if (!$xname) { $xname = $user[username]; }
+if (!$xname) { $xname = $user['username']; }
 $xname = htmlentities($xname);
 //echo $xname;
 ?>
@@ -172,25 +172,25 @@ if ($xdosearch) {
 			echo ">";
 			$r = pg_Fetch_array($result, $i, PGSQL_ASSOC);
 			
-			$a = htmlentities($r[id]);
+			$a = htmlentities($r['id']);
 			echo "<td>";
 			if ($a) { echo sprintf("%07.0f", $a); }
 			else { echo "&nbsp;"; }
 			echo "</td>\n";
 			
-			$a = htmlentities($r[artist]);
+			$a = htmlentities($r['artist']);
 			echo "<td>";
 			if ($a) { echo "$a"; }
 			else { echo "&nbsp;"; }
 			echo "</td>\n";
 			
-			$a = htmlentities($r[title]);
+			$a = htmlentities($r['title']);
 			echo "<td>";
 			if ($a) { echo "$a"; }
 			else { echo "&nbsp;"; }
 			echo "</td>\n";
 			
-			$a = htmlentities($r[username]);
+			$a = htmlentities($r['username']);
 			echo "<td>";
 			if ($a) { echo "$a"; }
 			else { echo "&nbsp;"; }
@@ -198,7 +198,7 @@ if ($xdosearch) {
 			
 //selected
 			$a = htmlentities($r[$when]);
-			if ($when!=arrivaldate) {$a=date("Y-m-d", $a);}
+			if ($when!='arrivaldate') {$a=date("Y-m-d", $a);}
 			echo "<td>";
 			if ($a) { echo "$a"; }
 			else { echo "&nbsp;"; }
@@ -230,7 +230,7 @@ if ($xdosearch) {
 			else { echo "&nbsp;"; }
 			echo "</td>\n";
 */			
-			$a = htmlentities($r[id]);
+			$a = htmlentities($r['id']);
 			$a=wave_files_present($a,$db);
 			echo "<td>";
 			if ($a==0) { echo "OK"; }
@@ -239,7 +239,7 @@ if ($xdosearch) {
 			echo "</td>\n";
 			
 			
-			$a = htmlentities($r[local]);
+			$a = htmlentities($r['local']);
 			echo "<td>";
 			if ($a) {
 				if ($a==2 or $a==3) { echo "L"; }
@@ -248,7 +248,7 @@ if ($xdosearch) {
 			else { echo "&nbsp;"; }
 			echo "</td>\n";
 			
-			$a = htmlentities($r[format]);
+			$a = htmlentities($r['format']);
 			echo "<td>";
 			if ($a) {
 				if ($a==1) { echo "CD"; }
@@ -265,7 +265,7 @@ if ($xdosearch) {
 			
 			echo "<td width=1 align=center>";
 			echo "<a HREF=cdshow.php?";
-			echo "xref=" . $r[id] . ">Show<a>";
+			echo "xref=" . $r['id'] . ">Show<a>";
 			
 			echo "</td></TR>\n";
 
@@ -296,11 +296,11 @@ function wave_files_present($cdid,$dbname) {
 	for ($i=0;$i<$num;$i++) {
 		$istitle = 0;
 		$r = pg_Fetch_array($result, $i, PGSQL_ASSOC);
-		$tracknum[$i] = $r[tracknum];
-		$trackartist[$i] = $r[trackartist];
+		$tracknum[$i] = $r['tracknum'];
+		$trackartist[$i] = $r['trackartist'];
 		if ($trackartist[$i]) { $isartist = 1; }
-		$tracktitle[$i] = $r[tracktitle];
-		$thetracknum = sprintf("%02.0f", $r[tracknum]);
+		$tracktitle[$i] = $r['tracktitle'];
+		$thetracknum = sprintf("%02.0f", $r['tracknum']);
 		$data=strtolower($tracktitle[$i]);
 		$data=strpos($tracktitle[$i],"[data");
 		if (strpos(strtolower ($tracktitle[$i]),"[data") === false) {

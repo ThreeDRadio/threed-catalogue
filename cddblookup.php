@@ -16,7 +16,7 @@ header("Expires: 0");?>
 <BODY>
 
 <?php
-if (!$admin && $user[cdeditor] != "t") {
+if (!$admin && $user['cdeditor'] != "t") {
 	echo "<p><font color=red><b>You do not have the necessary privilages to do that!</b></font><p>";
 	echo "</BODY></HTML>";
 	exit;
@@ -44,7 +44,7 @@ if ($xadd) {
 	$kquery = "SELECT id FROM cd WHERE OID = $q$lastoid$q;";
 	$kresult = pg_query($db, $kquery);
 	$r = pg_fetch_array($kresult, 0, PGSQL_ASSOC);
-	$xref = $r[id];
+	$xref = $r['id'];
 	
 	
 	$trackcount = count($xtrackartist);
@@ -81,7 +81,7 @@ if ($xadd) {
 		$ttresult = pg_query($db, $ttquery);
 	}
 	
-	if ($kresult) { header("Location: http://".$_SERVER['HTTP_HOST'] .dirname($_SERVER['PHP_SELF']) ."/cdedit.php?xref=".$xref); }
+	if ($kresult) { header("Location: https://".$_SERVER['HTTP_HOST'] .dirname($_SERVER['PHP_SELF']) ."/cdedit.php?xref=".$xref); }
 	
 }
 ?>
@@ -94,7 +94,7 @@ if ($xadd) {
 
 <?php
 if ($id) {
-	$url = "http://www.gracenote.com/search/album_details.php?tui_id=".$id;
+	$url = "https://www.gracenote.com/search/album_details.php?tui_id=".$id;
 	$ch = curl_init ($url);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER,1); 
 	curl_setopt ($ch, CURLOPT_HEADER, 0);

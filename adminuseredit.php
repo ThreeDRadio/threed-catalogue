@@ -82,7 +82,7 @@ if ($xupdate && $gid) {
 	adminbook=$q$xadminbook$q
 	WHERE id = $q$gid$q;";
 	$result = pg_query($db, $uquery);
-	if (!$error) { header("Location: http://".$_SERVER['HTTP_HOST'] .dirname($_SERVER['PHP_SELF']) ."/users.php"); }
+	if (!$error) { header("Location: https://".$_SERVER['HTTP_HOST'] .dirname($_SERVER['PHP_SELF']) ."/users.php"); }
 }
 ?>
 
@@ -96,17 +96,17 @@ if ($xupdate && $gid) {
 
 <tr bgcolor="#AAAAFF">
 <td><b>Username</b></td>
-<td><input type=text name=xusername value="<?php $a=htmlentities($row[username]); echo "$a"; ?>" size=30 maxlength=50></td>
+<td><input type=text name=xusername value="<?php $a=htmlentities($row['username']); echo "$a"; ?>" size=30 maxlength=50></td>
 </tr>
 
 <tr bgcolor="#CCCCFF">
 <td><b>First Name</b></td>
-<td><input type=text name=xfirst value="<?php $a=htmlentities($row[first]); echo "$a"; ?>" size=30 maxlength=50></td>
+<td><input type=text name=xfirst value="<?php $a=htmlentities($row['first']); echo "$a"; ?>" size=30 maxlength=50></td>
 </tr>
 
 <tr bgcolor="#AAAAFF">
 <td><b>Last Name</b></td>
-<td><input type=text name=xlast value="<?php $a=htmlentities($row[last]); echo "$a"; ?>" size=30 maxlength=50></td>
+<td><input type=text name=xlast value="<?php $a=htmlentities($row['last']); echo "$a"; ?>" size=30 maxlength=50></td>
 </tr>
 
 <tr bgcolor="#CCCCFF">
@@ -122,32 +122,32 @@ if ($xupdate && $gid) {
 <tr bgcolor="#AAAAFF">
 <td><b>Active</b></td>
 <td>
-<input type=radio id=2 name=xactive value=t<?php if ($row[active] == 't') { echo " checked"; } ?>>Yes</input>
-<input type=radio id=2 name=xactive value=f<?php if ($row[active] != 't') { echo " checked"; } ?>>No</input>
+<input type=radio id=2 name=xactive value=t<?php if ($row['active'] == 't') { echo " checked"; } ?>>Yes</input>
+<input type=radio id=2 name=xactive value=f<?php if ($row['active'] != 't') { echo " checked"; } ?>>No</input>
 </td>
 </tr>
 
 <tr bgcolor="#CCCCFF">
 <td><b>Admin</b></td>
 <td>
-<input type=radio id=2 name=xadmin value=t<?php if ($row[admin] == 't') { echo " checked"; } ?>>Yes</input>
-<input type=radio id=2 name=xadmin value=f<?php if ($row[admin] != 't') { echo " checked"; } ?>>No</input>
+<input type=radio id=2 name=xadmin value=t<?php if ($row['admin'] == 't') { echo " checked"; } ?>>Yes</input>
+<input type=radio id=2 name=xadmin value=f<?php if ($row['admin'] != 't') { echo " checked"; } ?>>No</input>
 </td>
 </tr>
 
 <tr bgcolor="#AAAAFF">
 <td><b>CD Editor</b></td>
 <td>
-<input type=radio id=2 name=xcdeditor value=t<?php if ($row[cdeditor] == 't') { echo " checked"; } ?>>Yes</input>
-<input type=radio id=2 name=xcdeditor value=f<?php if ($row[cdeditor] != 't') { echo " checked"; } ?>>No</input>
+<input type=radio id=2 name=xcdeditor value=t<?php if ($row['cdeditor'] == 't') { echo " checked"; } ?>>Yes</input>
+<input type=radio id=2 name=xcdeditor value=f<?php if ($row['cdeditor'] != 't') { echo " checked"; } ?>>No</input>
 </td>
 </tr>
 
 <tr bgcolor="#AAAAFF">
 <td><b>Booking Admin</b></td>
 <td>
-<input type=radio id=2 name=xadminbook value=t<?php if ($row[adminbook] == 't') { echo " checked"; } ?>>Yes</input>
-<input type=radio id=2 name=xadminbook value=f<?php if ($row[adminbook] != 't') { echo " checked"; } ?>>No</input>
+<input type=radio id=2 name=xadminbook value=t<?php if ($row['adminbook'] == 't') { echo " checked"; } ?>>Yes</input>
+<input type=radio id=2 name=xadminbook value=f<?php if ($row['adminbook'] != 't') { echo " checked"; } ?>>No</input>
 </td>
 </tr>
 

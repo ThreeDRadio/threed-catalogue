@@ -24,28 +24,41 @@ if ($check) { # uploading a file
 		$xcategory = "0";
 		$xstatus = "0";
 		$timenow = time();
-		$uquery = "INSERT INTO file (name, size, description, whouploaded, whenuploaded,
-				whomodified, whenmodified, category, status) VALUES (
-		$q$xname$q,
-		$q$size$q,
-		$q$xdescription$q,
-		$q$cid$q,
-		$q$timenow$q,
-		$q$cid$q,
-		$q$timenow$q,
-		$q$xcategory$q,
-		$q$xstatus$q);";
+		$uquery = "INSERT INTO file (
+			name, 
+			size, 
+			description, 
+			whouploaded, 
+			whenuploaded,
+			whomodified, 
+			whenmodified, 
+			category, 
+			status
+		) VALUES (
+			$q$xname$q,
+			$q$size$q,
+			$q$xdescription$q,
+			$q$cid$q,
+			$q$timenow$q,
+			$q$cid$q,
+			$q$timenow$q,
+			$q$xcategory$q,
+			$q$xstatus$q
+		) RETURNING id;";
+
 		$uresult = pg_query($db, $uquery);
-		$lastoid = pg_last_oid($uresult);
-		$kquery = "SELECT id FROM file WHERE OID = $q$lastoid$q;";
-		$kresult = pg_query($db, $kquery);
-		$kr = pg_fetch_array($kresult, 0, PGSQL_ASSOC);
-		$res = move_uploaded_file($_FILES['xuserfile']['tmp_name'], "$filestore$kr[id]");
-		echo "<p>##$res##<P>";
-		echo "<p>FILE UPLOADED";
-		$goto = "Location: http://".$_SERVER['HTTP_HOST'] .dirname($_SERVER['PHP_SELF']) ."/fileedit.php?xref=".$kr[id];
-		echo "<p>$goto";
-		if ($kresult) { header($goto); }
+
+		if ($uresult && pg_num_rows($uresult) > 0) { 
+			$id_of_new_row = pg_fetch_row($uresult)[0];
+			$res = move_uploaded_file($_FILES['xuserfile']['tmp_name'], "$filestore$id_of_new_row");
+			echo "<p>##$res##<P>";
+			echo "<p>FILE UPLOADED";
+			$goto = "Location: https://".$_SERVER['HTTP_HOST'] .dirname($_SERVER['PHP_SELF']) ."/fileedit.php?xref=".$id_of_new_row;
+			echo "<p>$goto";
+			header($goto);
+		} else {
+			header("Location: https://".$_SERVER['HTTP_HOST'] .dirname($_SERVER['PHP_SELF']) ."/files.php");
+		}
 	}
 }
 ?>
@@ -65,7 +78,7 @@ echo "</tr>";
 
 
 </table>
-<input type=hidden name=xref value=<?php=$xref?>>
+<input type=hidden name=xref value=<?php $xref?>>
 <p><input type=submit name=xupdate value="Upload Now">
 </form>
 

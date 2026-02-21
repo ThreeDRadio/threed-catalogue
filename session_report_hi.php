@@ -172,19 +172,19 @@ if ($xdosearch) {
 			echo ">";
 			$r = pg_Fetch_array($result, $i, PGSQL_ASSOC);
 			
-			$a = htmlentities($r[id]);
+			$a = htmlentities($r['id']);
 			echo "<td>";
 			if ($a) { echo sprintf("%07.0f", $a); }
 			else { echo "&nbsp;"; }
 			echo "</td>\n";
 			
-			$a = htmlentities($r[artist]);
+			$a = htmlentities($r['artist']);
 			echo "<td>";
 			if ($a) { echo "$a"; }
 			else { echo "&nbsp;"; }
 			echo "</td>\n";
 			
-			$a = htmlentities($r[title]);
+			$a = htmlentities($r['title']);
 			echo "<td>";
 			if ($a) { echo "$a"; }
 			else { echo "&nbsp;"; }
@@ -230,7 +230,7 @@ if ($xdosearch) {
 			else { echo "&nbsp;"; }
 			echo "</td>\n";
 */			
-			$a = htmlentities($r[id]);
+			$a = htmlentities($r['id']);
 			$a=wave_files_present($a,$db);
 			echo "<td>";
 			if ($a==0) { echo "OK"; }
@@ -265,7 +265,7 @@ if ($xdosearch) {
 			
 			echo "<td width=1 align=center>";
 			echo "<a HREF=cdshow.php?";
-			echo "xref=" . $r[id] . ">Show<a>";
+			echo "xref=" . $r['id'] . ">Show<a>";
 			
 			echo "</td></TR>\n";
 

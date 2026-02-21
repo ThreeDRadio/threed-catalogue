@@ -57,11 +57,11 @@ $nresult = pg_query($db, $nquery);
 $nnum = pg_num_rows($nresult);
 for ($i=0;$i<$nnum;$i++) {
 	$nr = pg_Fetch_array($nresult, $i, PGSQL_ASSOC);
-	$id[$i] = $nr[id];
-	$a = $nr[first];
-	if ($nr[first] && $nr[last]) { $a .= " "; }
-	$a .= $nr[last];
-	if (!$a) { $a = $nr[username]; }
+	$id[$i] = $nr['id'];
+	$a = $nr['first'];
+	if ($nr['first'] && $nr['last']) { $a .= " "; }
+	$a .= $nr['last'];
+	if (!$a) { $a = $nr['username']; }
 	$namex[$i] = htmlentities($a);
 	$nameU[$i] = strtoupper($a);
 }
@@ -143,6 +143,9 @@ if ($xdosearch) {
 	$comments = preg_replace("/ +/"," ",$comments);
 	$comments = trim($comments);
 	
+	// Store every relevant query term in this list and use a prepared statement to execute the search.
+	$search_terms_array = [];
+	
 	$query = "SELECT DISTINCT ON ($qsort, cd.id) cd.id as theid, * FROM cd, cdtrack";
 	if ($comments) { $query .= ", cdcomment"; }
 	$query .= " WHERE (cd.id = cdtrack.cdid)";
@@ -151,52 +154,77 @@ if ($xdosearch) {
 	$artist = preg_replace("/,/"," ",$xartist);
 	$artist = preg_replace("/ +/"," ",$artist);
 	$artist = trim($artist);
+
 	if ($artist) {
 		$artist = explode(" ", $artist);
+
 		for ($i=0;$i<count($artist);$i++) {
-			$query = $query . " AND (artist ~~* $q%$artist[$i]%$q OR trackartist ~~* $q%$artist[$i]%$q)";
+			// Push this word with wildcards onto the parameters array.
+			array_push($search_terms_array, "%".$artist[$i]."%");
+			// Add a parameter with the number of this word, starting at 1. 
+			$this_term_statement_identifier = "$".count($search_terms_array);
+			$query = $query . " AND (artist ~~* $this_term_statement_identifier OR trackartist ~~* $this_term_statement_identifier)";
 		}
 	}
 	
 	$album = preg_replace("/,/"," ",$xalbum);
 	$album = preg_replace("/ +/"," ",$album);
 	$album = trim($album);
-	if (get_magic_quotes_gpc()) {
-		$album = stripslashes($album);
-	}
+	$album = stripslashes($album);
+
 	if ($album) {
 		$album = explode(" ", $album);
+
 		for ($i=0;$i<count($album);$i++) {
-			$album[$i] = pg_escape_string($album[$i]);
-			echo $album[$i] . "<br>";
-			$query = $query . " AND (title ~~* $q%$album[$i]%$q)";
+			// Push this word with wildcards onto the parameters array.
+			array_push($search_terms_array, "%".$album[$i]."%");
+			// Add a parameter with the number of this word, starting at 1. 
+			$this_term_statement_identifier = "$".count($search_terms_array);
+			$query = $query . " AND (title ~~* $this_term_statement_identifier)";
 		}
 	}
 	
 	$track = preg_replace("/,/"," ",$xtrack);
 	$track = preg_replace("/ +/"," ",$track);
 	$track = trim($track);
+
 	if ($track) {
 		$track = explode(" ", $track);
+
 		for ($i=0;$i<count($track);$i++) {
-			$query = $query . " AND (tracktitle ~~* $q%$track[$i]%$q)";
+			// Push this word with wildcards onto the parameters array.
+			array_push($search_terms_array, "%".$track[$i]."%");
+			// Add a parameter with the number of this word, starting at 1. 
+			$this_term_statement_identifier = "$".count($search_terms_array);
+			$query = $query . " AND (tracktitle ~~* $this_term_statement_identifier)";
 		}
 	}
 	
 	$company = preg_replace("/,/"," ",$xcompany);
 	$company = preg_replace("/ +/"," ",$company);
 	$company = trim($company);
+
 	if ($company) {
 		$company = explode(" ", $company);
+		
 		for ($i=0;$i<count($company);$i++) {
-			$query = $query . " AND (company ~~* $q%$company[$i]%$q)";
+			// Push this word with wildcards onto the parameters array.
+			array_push($search_terms_array, "%".$company[$i]."%");
+			// Add a parameter with the number of this word, starting at 1. 
+			$this_term_statement_identifier = "$".count($search_terms_array);
+			$query = $query . " AND (company ~~* $this_term_statement_identifier)";
 		}
 	}
 	
 	if ($comments) {
 		$comments = explode(" ", $comments);
+		
 		for ($i=0;$i<count($comments);$i++) {
-			$query = $query . " AND (cdcomment.comment ~~* $q%$comments[$i]%$q)";
+			// Push this word with wildcards onto the parameters array.
+			array_push($search_terms_array, "%".$comments[$i]."%");
+			// Add a parameter with the number of this word, starting at 1. 
+			$this_term_statement_identifier = "$".count($search_terms_array);
+			$query = $query . " AND (cdcomment.comment ~~* $this_term_statement_identifier)";
 		}
 	}
 	
@@ -221,8 +249,9 @@ if ($xdosearch) {
 	
 	if ($xsort == 2) { $query = $query . " ORDER BY " . $qsort . " DESC, cd.id DESC;"; }
 	else { $query = $query . " ORDER BY " . $qsort . ";"; }
-	#echo htmlentities($query);
-	$result = pg_query($db, $query);
+
+	$prepared_statement = pg_prepare($db, "advanced_cd_query", $query);
+	$result = pg_execute($db, "advanced_cd_query", $search_terms_array);
 	$num = pg_num_rows($result);
 	echo "<p><table border=0 cellspacing=0 cellpadding=3>\n";
 	echo "<tr><td><b>$num match";
@@ -255,24 +284,24 @@ if ($xdosearch) {
 			$r = pg_Fetch_array($result, $i, PGSQL_ASSOC);
 
 			
-			$a = htmlentities($r[artist]);
+			$a = htmlentities($r['artist']);
 			echo "<td>";
 			if ($a) { echo "$a"; }
 			else { echo "&nbsp;"; }
 			echo "</td>\n";
 			
-			$a = htmlentities($r[title]);
+			$a = htmlentities($r['title']);
 			echo "<td>";
 			if ($a) { echo "$a"; }
 			else { echo "&nbsp;"; }
-			if ($r[digital] != 'f') {
+			if ($r['digital'] != 'f') {
                           echo ' <span style="color: #ff9933;">[DIGITAL]</span>';
                         }
 			echo "</td>\n";
 			
-			if ($r[arrivaldate] == "0001-01-01") { $a = ""; }
+			if ($r['arrivaldate'] == "0001-01-01") { $a = ""; }
 			else {
-				$thedayN = strtotime($r[arrivaldate]);
+				$thedayN = strtotime($r['arrivaldate']);
 				$a = date ("d/m/Y", $thedayN);
 			}
 			echo "<td align=center>";
@@ -284,12 +313,12 @@ if ($xdosearch) {
 			
 			echo "<td width=1 align=center>";
 			echo "<a HREF=cdshow.php?";
-			echo "xref=" . $r[theid] . ">Show<a>";
+			echo "xref=" . $r['theid'] . ">Show<a>";
 			
-			if ($user[admin] == "t" || ($user[cdeditor] == "t" && $r[status] != 2)) {
+			if ($user['admin'] == "t" || ($user['cdeditor'] == "t" && $r['status'] != 2)) {
 				echo "&nbsp;";
 				echo "<a HREF=cdedit.php?";
-				echo "xref=" . $r[theid] . " target=_blank>Edit<a>";
+				echo "xref=" . $r['theid'] . " target=_blank>Edit<a>";
 			}
 			
 			echo "</td></TR>\n";

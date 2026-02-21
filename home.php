@@ -16,7 +16,7 @@ header("Expires: 0");?>
 <BODY>
 
 <?php
-if ($user[first]) { $a = $user[first]; } else { $a = $user[username]; }
+if ($user['first']) { $a = $user['first']; } else { $a = $user['username']; }
 $a = htmlentities($a);
 echo "<p><b>Hello $a</b>";
 
@@ -27,7 +27,7 @@ if ($mnum == 1) {
 	$mr = pg_Fetch_array($mresult, 0, PGSQL_ASSOC);
 }
 
-$motd = htmlentities($mr[note]);
+$motd = htmlentities($mr['note']);
 $motd = preg_replace("/\n/","<br>",$motd);
 echo "<p>$motd";
 ?>
