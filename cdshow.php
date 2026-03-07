@@ -65,27 +65,46 @@ $mp3hipath = "/data/music/hi";
 		exit;
 	}
 
-	$r = pg_Fetch_array($result, 0, PGSQL_ASSOC);
+	$r = pg_fetch_array($result, 0, PGSQL_ASSOC);
 
 	if ($xaddcomment && trim($xcomment)) {
-
-		// if (get_magic_quotes_gpc()) {
-		$xcomment = stripslashes($xcomment);
-		// }
-		$xcomment = SanitizeFromWord($xcomment);
-		$xcomment = pg_escape_string($xcomment);
-
 		$timenow = time();
 		$zero = "0";
-		$uquery = "INSERT INTO cdcomment (cdid, cdtrackid, comment, createwho, createwhen,
-			modifywho, modifywhen)
-			VALUES ($q$xref$q, $q$zero$q, $q$xcomment$q,
-			$q$cid$q, $q$timenow$q, $q$cid$q, $q$timenow$q);";
-		$uresult = pg_query($db, $uquery);
+
+		$uquery = "INSERT INTO cdcomment (
+			cdid, 
+			cdtrackid, 
+			comment, 
+			createwho, 
+			createwhen,
+			modifywho,
+			modifywhen
+		) VALUES (
+			$1,
+			$2,
+			$3,
+			$4,
+			$5,
+			$6,
+			$7
+		);";
+
+		pg_prepare($db, "new_comment_insert", $uquery);
+
+		$comment_array = [
+			$xref,
+			$zero,
+			$xcomment,
+			$cid,
+			$timenow,
+			$cid,
+			$timenow
+		];
+
+		pg_execute($db, "new_comment_insert", $comment_array);
 	}
 
 	echo "<p><TABLE border=0 cellpadding=0 cellspacing=0 bgcolor=#FFFFFF><TR valign=middle><TR>";
-
 	echo "<TD valign=middle><B>MUSIC CATALOGUE LOOKUP</B></TD>";
 
 	if ($user['admin'] == 't' || ($user['cdeditor'] == "t" && $r['status'] != 2)) {

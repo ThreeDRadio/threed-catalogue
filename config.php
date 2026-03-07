@@ -1,3 +1,3 @@
 <?php
-$app_version = "1.2";
+$app_version = "1.2.1";
 ?>
