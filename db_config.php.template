@@ -1,0 +1,5 @@
+<?php
+$db_host = "<db-url-here>";
+$db_user = "<db-user-here>";
+$db_pass = "<db-pass-here>";
+?>
