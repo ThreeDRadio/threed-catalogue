@@ -1,5 +1,5 @@
 <?php require("verify.php");
-require_once("config.php");
+require_once("app_config.php");
 #### User has logged in and been verified ####
 
 header("Cache-Control: no-cache");
@@ -14,7 +14,7 @@ header("Expires: 0");?>
 <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
 <META HTTP-EQUIV="Cache-Control" CONTENT="no-cache">
 </head>
-<BODY bgcolor="#CCCCCC">
+<BODY bgcolor="<?php echo $app_menu_bg_colour; ?>">
 
 <p><a href=home.php target=main><b>Home</b></a>
 
