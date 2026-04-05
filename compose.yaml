@@ -8,12 +8,19 @@
 # database or a cache. For examples, see the Awesome Compose repository:
 # https://github.com/docker/awesome-compose
 services:
-  server:
+  catalogue-old:
     build:
       context: .
+    image:
+      dockerhost01v:5000/threed-catalogue-server:latest
+    secrets:
+      - db_config
     ports:
       - 9000:80
       - 9001:443
+secrets:
+  db_config:
+    file: ./db_config.php
 
 # The commented out section below is an example of how to define a PostgreSQL
 # database that your application can use. `depends_on` tells Docker Compose to
