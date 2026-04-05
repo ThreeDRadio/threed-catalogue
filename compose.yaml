@@ -8,7 +8,7 @@
 # database or a cache. For examples, see the Awesome Compose repository:
 # https://github.com/docker/awesome-compose
 services:
-  catalogue-old:
+  threed-catalogue-server:
     build:
       context: .
     image:
