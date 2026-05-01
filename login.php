@@ -1,4 +1,4 @@
-<?php include_once("db_config.php");
+<?php include_once("config.php");
 extract($_POST);
 $xpassword = MD5($xpassword);
 

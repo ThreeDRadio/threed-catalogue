@@ -1,5 +1,5 @@
 <?php require("verify.php");
-require_once("app_config.php");
+require_once("config.php");
 #### User has logged in and been verified ####
 
 header("Cache-Control: no-cache");

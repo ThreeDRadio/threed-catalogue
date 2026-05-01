@@ -1,4 +1,4 @@
-<?php include_once("db_config.php");
+<?php include_once("config.php");
 ob_start();
 #set_magic_quotes_runtime (1)
 extract($_POST);
