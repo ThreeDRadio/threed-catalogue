@@ -5,13 +5,11 @@ on:
 
 jobs:
   build:
+    environment: test
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v4
     
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
-      
-    - name: Copy file locally
-      run: cp config.php.template config.php
+      run: docker build . --file Dockerfile --tag ${{ env.CONTAINER_NAME }}:latest
