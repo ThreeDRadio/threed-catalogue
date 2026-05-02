@@ -35,5 +35,5 @@ jobs:
           whoami
           docker stop ${{ vars.CONTAINER_NAME }}
           docker container rm ${{ vars.CONTAINER_NAME }}
-          docker pull ghcr.io/${{ vars.CR_PAT }}/${{ vars.CONTAINER_NAME }}:testing
-          docker run -p 9000:80 -p 9001:443 --name ${{ vars.CONTAINER_NAME }} -d -t ghcr.io/${{ vars.CR_PAT }}/${{ vars.CONTAINER_NAME }}:testing
+          docker pull ghcr.io/$CR_USER/${{ vars.CONTAINER_NAME }}:testing
+          docker run -p 9000:80 -p 9001:443 --name ${{ vars.CONTAINER_NAME }} -d -t ghcr.io/$CR_USER/${{ vars.CONTAINER_NAME }}:testing
