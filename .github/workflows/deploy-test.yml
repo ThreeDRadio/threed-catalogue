@@ -26,12 +26,13 @@ jobs:
   deploy-remote:
     environment: test
     runs-on: ubuntu-latest
+    
     steps:
-      - uses: appleboy/ssh-action@v1
-      - name: ssh into docker host
-      with:
-        host: ${{ vars.SERVER_HOST }}
-        username: ${{ secrets.SERVER_USER }}
-        key: ${{ secrets.SSH_PUB_KEY }}
-        port: ${{ secrets.SERVER_PORT }}
-        script: whoami
+      - name: Execute remote SSH commands using SSH key
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ vars.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SSH_PUB_KEY }}
+          port: ${{ secrets.SERVER_PORT }}
+          script: whoami
