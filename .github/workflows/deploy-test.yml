@@ -5,6 +5,7 @@ on:
 
 env:
   CONTAINER_NAME: ${{ vars.CONTAINER_NAME }}
+  CR_PAT: ${{ vars.CR_PAT }}
   
 jobs:
   build:
@@ -13,6 +14,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag $CONTAINER_NAME:latest
+      run: docker build . --file Dockerfile --tag $CONTAINER_NAME:testing
+      
+    - name: Login to the GitHub Docker registry
+      run: echo $CR_PAT | docker login ghcr.io -u ThreeDRadio --password-stdin
