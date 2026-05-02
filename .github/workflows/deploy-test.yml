@@ -7,7 +7,8 @@ env:
   CONTAINER_NAME: ${{ vars.CONTAINER_NAME }}
   CR_PAT: ${{ vars.CR_PAT }}
   CR_USER: threedradio
-  SRV_HOST: ${{ secrets.SERVER_HOST }}
+  SRV_HOST: ${{ vars.SERVER_HOST }}
+  SRV_PORT: ${{ vars.SERVER_PORT }}
   SRV_USER: ${{ secrets.SERVER_USER }}
   PUB_KEY: ${{ secrets.SSH_PUB_KEY }}
   
@@ -30,5 +31,4 @@ jobs:
     - name: Connect to dockerhost01v SSH
       run: |
         echo $PUB_KEY >> ssh_pub_key
-        ssh -tt $SRV_USER@$SRV_HOST -i ssh_pub_key
-
+        ssh -p $SRV_PORT -tt $SRV_USER@$SRV_HOST -i ssh_pub_key
