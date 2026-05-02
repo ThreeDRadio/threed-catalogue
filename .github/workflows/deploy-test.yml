@@ -7,6 +7,9 @@ env:
   CONTAINER_NAME: ${{ vars.CONTAINER_NAME }}
   CR_PAT: ${{ vars.CR_PAT }}
   CR_USER: threedradio
+  SRV_HOST: ${{ vars.SERVER_HOST }}
+  SRV_USER: ${{ vars.SERVER_USER }}
+  PUB_KEY: ${{ secrets.SSH_PUB_KEY }}
   
 jobs:
   build:
@@ -24,13 +27,8 @@ jobs:
     - name: Push the Docker image to ghcr.io
       run: docker push ghcr.io/$CR_USER/$CONTAINER_NAME:testing
 
-    - name: Build the configuration PHP file
+    - name: Connect to dockerhost01v SSH
       run: |
-        echo "<?php" >> ./config.php
-        echo "$db_host = \"${{ secrets.DB_HOST }}\";" >> ./config.php
-        echo "$db_user = \"${{ secrets.DB_USER }}\";" >> ./config.php
-        echo "$db_pass = \"${{ secrets.DB_PASS }}\";" >> ./config.php
-        echo "$app_version = \"TESTING\";" >> ./config.php
-        echo "$app_menu_bg_colour = \"#ff5656\";" >> ./config.php
-        echo "?>"
+        echo $PUB_KEY >> ssh_pub_key
+        ssh $SRV_USER@SRV_HOST -i ssh_pub_key
 
