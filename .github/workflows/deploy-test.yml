@@ -3,6 +3,9 @@ name: Docker Image CI
 on:
   workflow_dispatch:   
 
+env:
+  CONTAINER_NAME: ${{ vars.CONTAINER_NAME }}
+  
 jobs:
   build:
     environment: test
