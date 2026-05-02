@@ -31,4 +31,9 @@ jobs:
         username: ${{ secrets.SSH_USER }}
         key: ${{ secrets.SSH_KEY }}
         port: ${{ secrets.SSH_PORT }}
-        script: whoami
+        script: | 
+          whoami
+          docker stop $CONTAINER_NAME 
+          docker container rm $CONTAINER_NAME
+          docker pull ghcr.io/$CR_USER/$CONTAINER_NAME:testing
+          docker run -p 9000:80 -p 9001:443 --name $CONTAINER_NAME -d -t ghcr.io/$CR_USER/$CONTAINER_NAME:testing
