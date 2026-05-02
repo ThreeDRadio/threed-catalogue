@@ -7,11 +7,7 @@ env:
   CONTAINER_NAME: ${{ vars.CONTAINER_NAME }}
   CR_PAT: ${{ vars.CR_PAT }}
   CR_USER: threedradio
-  SRV_HOST: ${{ vars.SERVER_HOST }}
-  SRV_PORT: ${{ vars.SERVER_PORT }}
-  SRV_USER: ${{ secrets.SERVER_USER }}
-  PUB_KEY: ${{ secrets.SSH_PUB_KEY }}
-  
+
 jobs:
   build:
     environment: test
@@ -27,9 +23,15 @@ jobs:
       
     - name: Push the Docker image to ghcr.io
       run: docker push ghcr.io/$CR_USER/$CONTAINER_NAME:testing
-
-    - name: Connect to dockerhost01v SSH
-      run: |
-        echo $PUB_KEY >> ssh_pub_key
-        ssh -p $SRV_PORT -i ssh_pub_key $SRV_USER@$SRV_HOST
-        exit
+  deploy-remote:
+    environment: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: appleboy/ssh-action@v1
+      - name: ssh into docker host
+      with:
+        host: ${{ vars.SERVER_HOST }}
+        username: ${{ secrets.SERVER_USER }}
+        key: ${{ secrets.SSH_PUB_KEY }}
+        port: ${{ secrets.SERVER_PORT }}
+        script: whoami
