@@ -17,6 +17,6 @@ jobs:
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag $CONTAINER_NAME:testing
     - name: Login to the GitHub Docker registry
-      run: echo $CR_PAT | docker login ghcr.io -u ThreeDRadio --password-stdin
+      run: echo $CR_PAT | docker login ghcr.io -u threedradio --password-stdin
     - name: Push the Docker image to ghcr.io
-      run: docker push ghcr.io/ThreeDRadio/$CONTAINER_NAME:testing
+      run: docker push ghcr.io/threedradio/$CONTAINER_NAME:testing
