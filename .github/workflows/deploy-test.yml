@@ -32,3 +32,4 @@ jobs:
       run: |
         echo $PUB_KEY >> ssh_pub_key
         ssh -p $SRV_PORT -tt $SRV_USER@$SRV_HOST -i ssh_pub_key
+        exit
