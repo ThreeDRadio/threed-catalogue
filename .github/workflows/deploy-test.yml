@@ -16,6 +16,7 @@ jobs:
     - uses: actions/checkout@v4
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag $CONTAINER_NAME:testing
-      
     - name: Login to the GitHub Docker registry
       run: echo $CR_PAT | docker login ghcr.io -u ThreeDRadio --password-stdin
+    - name: Push the Docker image to ghcr.io
+      run: docker push ghcr.io/ThreeDRadio/$CONTAINER_NAME:testing
