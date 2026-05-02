@@ -1,4 +1,4 @@
-name: Docker Image CI
+name: Deploy for testing
 
 on:
   workflow_dispatch:   
