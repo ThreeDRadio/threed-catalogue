@@ -4,9 +4,7 @@ on:
   workflow_dispatch:   
 
 env:
-  CONTAINER_NAME: ${{ vars.CONTAINER_NAME }}
   CR_PAT: ${{ vars.CR_PAT }}
-  CR_USER: threedradio
 
 jobs:
   build:
@@ -16,13 +14,13 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag ghcr.io/$CR_USER/$CONTAINER_NAME:testing
+      run: docker build . --file Dockerfile --tag ghcr.io/threedradio/threed-catalogue-server:testing
       
     - name: Login to the GitHub Docker registry
-      run: echo $CR_PAT | docker login ghcr.io -u $CR_USER --password-stdin
+      run: echo $CR_PAT | docker login ghcr.io -u threedradio --password-stdin
       
     - name: Push the Docker image to ghcr.io
-      run: docker push ghcr.io/$CR_USER/$CONTAINER_NAME:testing
+      run: docker push ghcr.io/threedradio/threed-catalogue-server:testing
 
     - name: Execute remote SSH commands using SSH key
       uses: appleboy/ssh-action@v1
@@ -33,7 +31,7 @@ jobs:
         port: ${{ secrets.SSH_PORT }}
         script: | 
           whoami
-          docker stop ${{ vars.CONTAINER_NAME }}
-          docker container rm ${{ vars.CONTAINER_NAME }}
-          docker pull ghcr.io/$CR_USER/${{ vars.CONTAINER_NAME }}:testing
-          docker run -p 9000:80 -p 9001:443 --name ${{ vars.CONTAINER_NAME }} -d -t ghcr.io/$CR_USER/${{ vars.CONTAINER_NAME }}:testing
+          docker stop threed-catalogue-server
+          docker container rm threed-catalogue-server
+          docker pull ghcr.io/threedradio/threed-catalogue-server:testing
+          docker run -p 9000:80 -p 9001:443 --name threed-catalogue-server -d -t ghcr.io/threedradio/threed-catalogue-server:testing
