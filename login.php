@@ -44,13 +44,13 @@ if ($xlogin) { # trying to log in
 	<form method="post" action="login.php">
 		<p>
 		<table border=0 cellspacing=0 cellpadding=8>
-			<tr bgcolor="#CCCCFF">
+			<tr bgcolor="<?php echo $app_login_bg_colour; ?>">
 				<td><b>Username</b></td>
 				<td><input type=text name=xusername size=20 maxlength=50 value="">
 					</input></td>
 				<td></td>
 			</tr>
-			<tr bgcolor="#CCCCFF">
+			<tr bgcolor="<?php echo $app_login_bg_colour; ?>">
 				<td><b>Password</b></td>
 				<td><input type="password" name="xpassword" size="20" maxlength="50"></input></td>
 				<td><input type="submit" name="xlogin" value="login"></input></td>

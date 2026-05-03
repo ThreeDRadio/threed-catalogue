@@ -3,5 +3,6 @@ $db_host = "<db-url-here>";
 $db_user = "<db-user-here>";
 $db_pass = "<db-pass-here>";
 $app_version = "<version-here>";
-$app_menu_bg_colour = "<#hex-colour-here>"
+$app_menu_bg_colour = "#<hex-colour-here>";
+$app_login_bg_colour = "#<hex-colour-here>";
 ?>
