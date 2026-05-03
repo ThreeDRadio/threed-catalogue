@@ -22,7 +22,23 @@ jobs:
     - name: Push the Docker image to ghcr.io
       run: docker push ghcr.io/threedradio/threed-catalogue-server:testing
 
-    - name: Execute remote SSH commands using SSH key
+    - name: Write config.php to the remote
+      uses: appleboy/ssh-action@v1
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        key: ${{ secrets.SSH_KEY }}
+        port: ${{ secrets.SSH_PORT }}
+        script: > 
+          echo "<?php" >> /srv/docker/threed-catalogue-server/config.php
+          echo "$db_host = \"${{ secrets.DB_HOST }}\";" >> /srv/docker/threed-catalogue-server/config.php
+          echo "$db_user = \"${{ secrets.DB_USER }}\";" >> /srv/docker/threed-catalogue-server/config.php
+          echo "$db_pass = \"${{ secrets.DB_PASS }}\";" >> /srv/docker/threed-catalogue-server/config.php
+          echo "$app_version = \"TESTING\";" >> /srv/docker/threed-catalogue-server/config.php
+          echo "$app_menu_bg_colour = \"ff5656\"" >> /srv/docker/threed-catalogue-server/config.php
+          echo "?>" >> /srv/docker/threed-catalogue-server/config.php
+
+    - name: Pull the new Docker image from GitHub and restart the container
       uses: appleboy/ssh-action@v1
       with:
         host: ${{ secrets.SSH_HOST }}
@@ -30,8 +46,13 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         port: ${{ secrets.SSH_PORT }}
         script: | 
-          whoami
           docker stop threed-catalogue-server
           docker container rm threed-catalogue-server
           docker pull ghcr.io/threedradio/threed-catalogue-server:testing
-          docker run -p 9000:80 -p 9001:443 --name threed-catalogue-server -d -t ghcr.io/threedradio/threed-catalogue-server:testing
+          docker run \
+          -p 9000:80 \
+          -p 9001:443 \
+          --name threed-catalogue-server \
+          -v /srv/docker/threed-catalogue-server/config.php:/var/www/html/config.php:z \
+          -d \
+          -t ghcr.io/threedradio/threed-catalogue-server:testing
