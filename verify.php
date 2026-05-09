@@ -1,11 +1,14 @@
-<?php ob_start();
+<?php include_once("config.php");
+ob_start();
 #set_magic_quotes_runtime (1)
 extract($_POST);
 extract($_GET);
 $cid = $_COOKIE["threed_id"];
-settype ($cid, "integer");
+settype($cid, "integer");
 $cpassword = $_COOKIE["threed_password"];
-if (!$cpassword) { $cpassword = "nuffin"; }
+if (!$cpassword) {
+	$cpassword = "nuffin";
+}
 
 ############ Put your web proxy here or use "" for no proxy #########
 #$webproxy = "casr.adelaide.edu.au:80";
@@ -33,8 +36,11 @@ $filestore = "/data/webfiles/";
 # magic_quotes_gpc = On
 #####################################################################
 
-$db = pg_Connect ("host=localhost dbname=threed user=www password=tree");
-if (!$db) { echo "Oops - Database Failure - Things really are not working well - sigh"; exit; }
+$db = pg_Connect("host=$db_host dbname=threed user=$db_user password=$db_pass");
+if (!$db) {
+	echo "Oops - Database Failure - Things really are not working well - sigh";
+	exit;
+}
 
 $q = "'";
 $t = "t";
@@ -42,27 +48,39 @@ $query = "SELECT * FROM users WHERE id = $q$cid$q AND password = $q$cpassword$q 
 $result = pg_query($db, $query);
 $num = pg_num_rows($result);
 if ($num != 1) {
-	header("Location: https://".$_SERVER['HTTP_HOST'] .dirname($_SERVER['PHP_SELF']) ."/login.php");
+	header("Location: https://" . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']) . "/login.php");
 	exit;
 }
 
 $user = pg_Fetch_array($result, 0, PGSQL_ASSOC);
-if ($user["admin"] == "t") { $admin = 1; } else { $admin = 0; }
-if ($user["adminbook"] == "t") { $adminbook = 1; } else { $adminbook = 0; }
+if ($user["admin"] == "t") {
+	$admin = 1;
+} else {
+	$admin = 0;
+}
+if ($user["adminbook"] == "t") {
+	$adminbook = 1;
+} else {
+	$adminbook = 0;
+}
 
 $uquery = "SELECT * FROM users;";
 $uresult = pg_query($db, $uquery);
 $numusers = pg_num_rows($uresult);
-for ($i=0;$i<$numusers;$i++) {
+for ($i = 0; $i < $numusers; $i++) {
 	$ur = pg_Fetch_array($uresult, $i, PGSQL_ASSOC);
 	$a = $ur["first"];
-	if ($ur["first"] && $ur["last"]) { $a .= " "; }
+	if ($ur["first"] && $ur["last"]) {
+		$a .= " ";
+	}
 	$a .= $ur["last"];
-	if (!$a) { $a = $ur["username"]; }
+	if (!$a) {
+		$a = $ur["username"];
+	}
 	$name[$ur["id"]] = htmlentities($a);
 	$userid[$i] = $ur["id"];
 	$namelist[$i] = htmlentities($a);
 	$namelistU[$i] = strtoupper(htmlentities($a));
 }
-array_multisort ($namelistU, $namelist, $userid);
+array_multisort($namelistU, $namelist, $userid);
 ?>

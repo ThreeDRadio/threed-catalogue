@@ -1,0 +1,59 @@
+name: Deploy (test)
+on:
+  workflow_dispatch:   
+
+env:
+  CR_PAT: ${{ vars.CR_PAT }}
+
+jobs:
+  build:
+    environment: test
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag ghcr.io/threedradio/threed-catalogue-server:testing
+      
+    - name: Login to the GitHub Docker registry
+      run: echo $CR_PAT | docker login ghcr.io -u threedradio --password-stdin
+      
+    - name: Push the Docker image to ghcr.io
+      run: docker push ghcr.io/threedradio/threed-catalogue-server:testing
+
+    - name: Write config.php to the remote
+      uses: appleboy/ssh-action@v1
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        key: ${{ secrets.SSH_KEY }}
+        port: ${{ secrets.SSH_PORT }}
+        script: > 
+          rm /srv/docker/threed-catalogue-server/config.php; 
+          echo "<?php 
+            ${{ '\$db_host' }}=\"${{ secrets.DB_HOST }}\"; 
+            ${{ '\$db_user' }}=\"${{ secrets.DB_USER }}\"; 
+            ${{ '\$db_pass' }}=\"${{ secrets.DB_PASS }}\"; 
+            ${{ '\$app_version' }}=\"TESTING\"; 
+            ${{ '\$app_menu_bg_colour'}}=\"#ff5656\";
+            ${{ '\$app_login_bg_colour'}}=\"#ff0e0e\"; 
+          ?>" >> /srv/docker/threed-catalogue-server/config.php
+
+    - name: Pull the new Docker image from GitHub and restart the container
+      uses: appleboy/ssh-action@v1
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        key: ${{ secrets.SSH_KEY }}
+        port: ${{ secrets.SSH_PORT }}
+        script: | 
+          docker stop threed-catalogue-server
+          docker container rm threed-catalogue-server
+          docker pull ghcr.io/threedradio/threed-catalogue-server:testing
+          docker run \
+          -p 9000:80 \
+          -p 9001:443 \
+          --name threed-catalogue-server \
+          -v /srv/docker/threed-catalogue-server/config.php:/var/www/html/config.php:z \
+          -d \
+          -t ghcr.io/threedradio/threed-catalogue-server:testing

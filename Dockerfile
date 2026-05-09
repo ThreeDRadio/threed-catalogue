@@ -1,0 +1,36 @@
+# syntax=docker/dockerfile:1
+# https://docs.docker.com/go/dockerfile-reference/
+FROM php:8.4.11-apache
+
+# install dependencies.
+RUN apt-get update \
+    && apt-get install -y gcc \
+    && apt-get install -y libpq-dev \
+    && apt-get install -y curl \
+    && apt-get install -y libcurl4-openssl-dev
+
+# enable PGSQL and curl.
+RUN docker-php-ext-install curl \
+ && docker-php-ext-enable curl
+
+RUN docker-php-ext-install pgsql \
+ && docker-php-ext-enable pgsql
+
+# Expose HTTPS port.
+EXPOSE 443
+
+# Use the default production configuration for PHP runtime arguments, see
+# https://github.com/docker-library/docs/tree/master/php#configuration
+RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
+
+# Copy config over
+COPY default-ssl.conf /etc/apache2/sites-available/default-ssl.conf
+# Enable SSL in Apache2
+RUN a2enmod ssl && a2enmod rewrite
+
+# Copy app files from the app directory.
+COPY . /var/www/html
+
+# Switch to a non-privileged user (defined in the base image) that the app will run under.
+# See https://docs.docker.com/go/dockerfile-user-best-practices/
+USER www-data
