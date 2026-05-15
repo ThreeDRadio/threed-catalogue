@@ -29,6 +29,7 @@ COPY default-ssl.conf /etc/apache2/sites-available/default-ssl.conf
 RUN a2enmod ssl && a2enmod rewrite
 # Disable the default site and enable the SSL site
 RUN a2dissite 000-default.conf && a2ensite default-ssl.conf
+RUN systemctl restart apache2
 
 # Copy app files from the app directory.
 COPY . /var/www/html
