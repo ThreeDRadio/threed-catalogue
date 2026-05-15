@@ -27,6 +27,8 @@ RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 COPY default-ssl.conf /etc/apache2/sites-available/default-ssl.conf
 # Enable SSL in Apache2
 RUN a2enmod ssl && a2enmod rewrite
+# Disable the default site and enable the SSL site
+RUN a2dissite 000-default.conf && a2ensite default-ssl.conf
 
 # Copy app files from the app directory.
 COPY . /var/www/html
