@@ -54,8 +54,8 @@ jobs:
             -p 9000:80 \
             -p 9001:443 \
             --name threed-catalogue-server \
-            -v /srv/docker/threed-catalogue-server/keys/.key:/etc/apache2/ssl/ssl.key/server.key:z \
-            -v /srv/docker/threed-catalogue-server/keys/.key:/etc/apache2/ssl/ssl.crt/server.crt:z \
+            -v /srv/docker/threed-catalogue-server/keys/server.key:/etc/apache2/ssl/ssl.key/server.key:z \
+            -v /srv/docker/threed-catalogue-server/certs/server.crt:/etc/apache2/ssl/ssl.crt/server.crt:z \
             -v /srv/docker/threed-catalogue-server/config.php:/var/www/html/config.php:z \
             -d \
             -t ghcr.io/threedradio/threed-catalogue-server:testing
