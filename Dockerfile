@@ -17,7 +17,6 @@ RUN docker-php-ext-install pgsql \
  && docker-php-ext-enable pgsql
 
 # Expose ports.
-EXPOSE 80
 EXPOSE 443
 
 # Use the default production configuration for PHP runtime arguments, see
