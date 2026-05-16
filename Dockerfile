@@ -16,7 +16,7 @@ RUN docker-php-ext-install curl \
 RUN docker-php-ext-install pgsql \
  && docker-php-ext-enable pgsql
 
-# Expose HTTPS port.
+# Expose ports.
 EXPOSE 443
 
 # Use the default production configuration for PHP runtime arguments, see
@@ -27,10 +27,16 @@ RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 COPY default-ssl.conf /etc/apache2/sites-available/default-ssl.conf
 # Enable SSL in Apache2
 RUN a2enmod ssl && a2enmod rewrite
+# Disable the default site and enable the SSL site
+RUN a2dissite 000-default.conf && a2ensite default-ssl.conf
 
 # Copy app files from the app directory.
 COPY . /var/www/html
 
 # Switch to a non-privileged user (defined in the base image) that the app will run under.
 # See https://docs.docker.com/go/dockerfile-user-best-practices/
+
+# IF YOU RUN INTO PERMISSIONS PROBLEMS WITH CERTIFICATE AND/OR KEY, www-data UID IS 33
+# DO chown 33 <path-to-cert> 
+# DO chown 33 <path-to-key> 
 USER www-data
