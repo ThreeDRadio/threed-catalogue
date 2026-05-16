@@ -24,8 +24,9 @@ jobs:
 
     - name: Set current date
       run: echo "CURRENT_DATE=$(date +'%d-%m-%Y')" >> $GITHUB_ENV
-      
+
   deploy:
+    needs: build
     environment: prod
     runs-on: ubuntu-latest
 

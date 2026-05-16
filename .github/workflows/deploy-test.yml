@@ -22,6 +22,7 @@ jobs:
       run: docker push ghcr.io/threedradio/threed-catalogue-server:testing
 
   deploy:
+    needs: build
     environment: test
     runs-on: ubuntu-latest
 
