@@ -27,6 +27,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Set current date
+      run: echo "CURRENT_DATE=$(date +'%d-%m-%Y')" >> $GITHUB_ENV
+
     - name: Write config.php to the remote
       uses: appleboy/ssh-action@v1
       with:
