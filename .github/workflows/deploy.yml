@@ -1,29 +1,32 @@
-name: Deploy (test)
+name: Deploy
+
 on:
-  workflow_dispatch:   
+  push:
+    branches:
+      - master
 
 env:
   CR_PAT: ${{ vars.CR_PAT }}
 
 jobs:
   build:
-    environment: test
+    environment: prod
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v4
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag ghcr.io/threedradio/threed-catalogue-server:testing
+      run: docker build . --file Dockerfile --tag ghcr.io/threedradio/threed-catalogue-server:latest
       
     - name: Login to the GitHub Docker registry
       run: echo $CR_PAT | docker login ghcr.io -u threedradio --password-stdin
       
     - name: Push the Docker image to ghcr.io
-      run: docker push ghcr.io/threedradio/threed-catalogue-server:testing
+      run: docker push ghcr.io/threedradio/threed-catalogue-server:latest
 
   deploy:
     needs: build
-    environment: test
+    environment: prod
     runs-on: ubuntu-latest
 
     steps:
@@ -43,11 +46,11 @@ jobs:
             ${{ '\$db_host' }}=\"${{ secrets.DB_HOST }}\"; 
             ${{ '\$db_user' }}=\"${{ secrets.DB_USER }}\"; 
             ${{ '\$db_pass' }}=\"${{ secrets.DB_PASS }}\"; 
-            ${{ '\$app_version' }}=\"TESTING-${{ env.CURRENT_DATE }}-${{ github.run_attempt }}\"; 
-            ${{ '\$app_menu_bg_colour'}}=\"#ff5656\";
-            ${{ '\$app_login_bg_colour'}}=\"#ff0e0e\"; 
+            ${{ '\$app_version' }}=\"${{ env.CURRENT_DATE }}-${{ github.run_attempt }}\"; 
+            ${{ '\$app_menu_bg_colour'}}=\"#CCCCCC\";
+            ${{ '\$app_login_bg_colour'}}=\"#CCCCFF\"; 
           ?>" >> /srv/docker/threed-catalogue-server/config.php
-
+    
     - name: Pull the new Docker image from GitHub and restart the container
       uses: appleboy/ssh-action@v1
       with:
@@ -59,7 +62,7 @@ jobs:
           echo ${{ vars.CR_PAT }} | docker login ghcr.io -u threedradio --password-stdin
           docker stop threed-catalogue-server
           docker container rm threed-catalogue-server
-          docker pull ghcr.io/threedradio/threed-catalogue-server:testing
+          docker pull ghcr.io/threedradio/threed-catalogue-server:latest
           docker run \
             -p 9001:443 \
             --name threed-catalogue-server \
@@ -67,4 +70,5 @@ jobs:
             -v /srv/docker/threed-catalogue-server/certs/server.crt:/etc/apache2/ssl/ssl.crt/server.crt:z \
             -v /srv/docker/threed-catalogue-server/config.php:/var/www/html/config.php:z \
             -d \
-            -t ghcr.io/threedradio/threed-catalogue-server:testing
+            -t ghcr.io/threedradio/threed-catalogue-server:latest
+          
