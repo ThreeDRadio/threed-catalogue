@@ -47,7 +47,7 @@ jobs:
             ${{ '\$app_menu_bg_colour'}}=\"#ff5656\";
             ${{ '\$app_login_bg_colour'}}=\"#ff0e0e\"; 
           ?>" >> /srv/docker/threed-catalogue-server/config.php
-          
+
     - name: Pull the new Docker image from GitHub and restart the container
       uses: appleboy/ssh-action@v1
       with:
@@ -55,7 +55,8 @@ jobs:
         username: ${{ secrets.SSH_USER }}
         key: ${{ secrets.SSH_KEY }}
         port: ${{ secrets.SSH_PORT }}
-        script: | 
+        script: |
+          echo $CR_PAT | docker login ghcr.io -u threedradio --password-stdin;
           docker stop threed-catalogue-server
           docker container rm threed-catalogue-server
           docker pull ghcr.io/threedradio/threed-catalogue-server:testing
