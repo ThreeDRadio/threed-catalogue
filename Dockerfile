@@ -16,7 +16,8 @@ RUN docker-php-ext-install curl \
 RUN docker-php-ext-install pgsql \
  && docker-php-ext-enable pgsql
 
-# Expose HTTPS port.
+# Expose ports.
+EXPOSE 80
 EXPOSE 443
 
 # Use the default production configuration for PHP runtime arguments, see
@@ -35,4 +36,8 @@ COPY . /var/www/html
 
 # Switch to a non-privileged user (defined in the base image) that the app will run under.
 # See https://docs.docker.com/go/dockerfile-user-best-practices/
+
+# IF YOU RUN INTO PERMISSIONS PROBLEMS WITH CERTIFICATE AND/OR KEY, www-data UID IS 33
+# DO chown 33 <path-to-cert> 
+# DO chown 33 <path-to-key> 
 USER www-data
