@@ -49,9 +49,6 @@ jobs:
             ${{ '\$app_login_bg_colour'}}=\"#CCCCFF\"; 
           ?>" >> /srv/docker/threed-catalogue-server/config.php
 
-    - name: Login to the GitHub Docker registry
-      run: echo $CR_PAT | docker login ghcr.io -u threedradio --password-stdin
-
     - name: Pull the new Docker image from GitHub and restart the container
       uses: appleboy/ssh-action@v1
       with:
