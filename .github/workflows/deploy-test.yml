@@ -40,7 +40,7 @@ jobs:
             ${{ '\$db_host' }}=\"${{ secrets.DB_HOST }}\"; 
             ${{ '\$db_user' }}=\"${{ secrets.DB_USER }}\"; 
             ${{ '\$db_pass' }}=\"${{ secrets.DB_PASS }}\"; 
-            ${{ '\$app_version' }}=\"TESTING\"; 
+            ${{ '\$app_version' }}=\"TESTING-${{ env.CURRENT_DATE }}-${{ github.run_attempt }}\"; 
             ${{ '\$app_menu_bg_colour'}}=\"#ff5656\";
             ${{ '\$app_login_bg_colour'}}=\"#ff0e0e\"; 
           ?>" >> /srv/docker/threed-catalogue-server/config.php
