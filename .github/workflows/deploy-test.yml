@@ -38,7 +38,7 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         port: ${{ secrets.SSH_PORT }}
         script: > 
-          [ -f /srv/docker/threed-catalogue-server/config.php ] && rm /srv/docker/threed-catalogue-server/config.php
+          [ -f /srv/docker/threed-catalogue-server/config.php ] && rm /srv/docker/threed-catalogue-server/config.php;
           echo "<?php 
             ${{ '\$db_host' }}=\"${{ secrets.DB_HOST }}\"; 
             ${{ '\$db_user' }}=\"${{ secrets.DB_USER }}\"; 
