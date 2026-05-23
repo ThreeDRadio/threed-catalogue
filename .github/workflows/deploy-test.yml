@@ -1,7 +1,10 @@
-name: Deploy (test)
-on:
-  workflow_dispatch:   
+name: Deploy to staging
 
+on:
+  push:
+    branches:
+      - master
+      
 env:
   CR_PAT: ${{ vars.CR_PAT }}
 
