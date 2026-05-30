@@ -60,6 +60,8 @@ jobs:
         port: ${{ secrets.SSH_PORT }}
         script: |
           echo ${{ vars.CR_PAT }} | docker login ghcr.io -u threedradio --password-stdin
+          # chown 33 /srv/docker/threed-catalogue-server/keys/server.key
+          # chown 33 /srv/docker/threed-catalogue-server/certs/server.crt
           docker stop threed-catalogue-server
           docker container rm threed-catalogue-server
           docker pull ghcr.io/threedradio/threed-catalogue-server:testing
