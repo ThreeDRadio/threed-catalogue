@@ -1,3 +1,2 @@
 RewriteEngine On
-RewriteRule ^/threedfile/(.*)$   /database/download.php?xname=$1
 RewriteRule ^/database/play/(.*)$   /database/stream.php?xname=$1
