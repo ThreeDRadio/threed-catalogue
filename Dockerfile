@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 # https://docs.docker.com/go/dockerfile-reference/
-FROM php:8.4.11-apache
+FROM php:8.5.12-apache
 
 # install dependencies.
 RUN apt-get update \
